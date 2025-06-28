@@ -24,7 +24,8 @@
 #include <allegro.h>
 #include <fmt/core.h>
 
-cAbstractMentat::cAbstractMentat(bool canMissionSelect) {
+cAbstractMentat::cAbstractMentat(bool canMissionSelect)
+{
     iMentatSentence = -1;
 
     TIMER_Speaking = -1;
@@ -58,15 +59,16 @@ cAbstractMentat::cAbstractMentat(bool canMissionSelect) {
         cTextDrawer textDrawer(bene_font);
         int length = textDrawer.textLength("Mission select");
         const cRectangle &toMissionSelectRect = *textDrawer.getAsRectangle(game.m_screenX - length,
-                                                                           game.m_screenY - textDrawer.getFontHeight(),
-                                                                           "Mission select");
+                                                game.m_screenY - textDrawer.getFontHeight(),
+                                                "Mission select");
         cGuiButton *gui_btn_toMissionSelect = new cGuiButton(textDrawer, toMissionSelectRect, "Mission select",
-                                                             buttonKind);
+                buttonKind);
         gui_btn_toMissionSelect->setTextAlignHorizontal(buttonTextAlignment);
         cGuiActionToGameState *action = new cGuiActionToGameState(GAME_MISSIONSELECT, false);
         gui_btn_toMissionSelect->setOnLeftMouseButtonClickedAction(action);
         m_guiBtnToMissionSelect = gui_btn_toMissionSelect;
-    } else {
+    }
+    else {
         m_guiBtnToMissionSelect = nullptr;
     }
 
@@ -82,7 +84,8 @@ cAbstractMentat::cAbstractMentat(bool canMissionSelect) {
     logbook("cAbstractMentat::cAbstractMentat()");
 }
 
-cAbstractMentat::~cAbstractMentat() {
+cAbstractMentat::~cAbstractMentat()
+{
     // we can do this because Mentats are created/deleted before allegro gets destroyed
     if (gfxmovie) {
         unload_datafile(gfxmovie);
@@ -102,7 +105,8 @@ cAbstractMentat::~cAbstractMentat() {
     logbook("cAbstractMentat::~cAbstractMentat()");
 }
 
-void cAbstractMentat::think() {
+void cAbstractMentat::think()
+{
     if (state == INIT) {
         // no thinking for init state
         return;
@@ -111,7 +115,8 @@ void cAbstractMentat::think() {
     if (state == SPEAKING) {
         if (TIMER_Speaking > 0) {
             TIMER_Speaking--;
-        } else if (TIMER_Speaking == 0) {
+        }
+        else if (TIMER_Speaking == 0) {
             // calculate speaking stuff
 
             iMentatSentence += 2; // makes 0, 2, etc.
@@ -136,7 +141,8 @@ void cAbstractMentat::think() {
         }
 
         thinkMouth();
-    } else {
+    }
+    else {
         iMentatMouth = 0; // keep lips sealed
     }
 
@@ -147,7 +153,8 @@ void cAbstractMentat::think() {
     thinkMovie();
 }
 
-void cAbstractMentat::thinkMovie() {
+void cAbstractMentat::thinkMovie()
+{
     if (gfxmovie != nullptr) {
         TIMER_movie++;
 
@@ -155,7 +162,7 @@ void cAbstractMentat::thinkMovie() {
             iMovieFrame++;
 
             if (gfxmovie[iMovieFrame].type == DAT_END ||
-                gfxmovie[iMovieFrame].type != DAT_BITMAP) {
+                    gfxmovie[iMovieFrame].type != DAT_BITMAP) {
                 iMovieFrame = 0;
             }
             TIMER_movie = 0;
@@ -163,19 +170,23 @@ void cAbstractMentat::thinkMovie() {
     }
 }
 
-void cAbstractMentat::thinkEyes() {
+void cAbstractMentat::thinkEyes()
+{
     if (TIMER_Eyes > 0) {
         TIMER_Eyes--;
-    } else {
+    }
+    else {
         int i = rnd(100);
 
         int iWas = iMentatEyes;
 
         if (i < 30) {
             iMentatEyes = 3;
-        } else if (i < 60) {
+        }
+        else if (i < 60) {
             iMentatEyes = 0;
-        } else {
+        }
+        else {
             iMentatEyes = 4;
         }
 
@@ -186,16 +197,19 @@ void cAbstractMentat::thinkEyes() {
 
         if (iMentatEyes != 4) {
             TIMER_Eyes = 90 + rnd(160);
-        } else {
+        }
+        else {
             TIMER_Eyes = 30;
         }
     }
 }
 
-void cAbstractMentat::thinkMouth() {// MOUTH
+void cAbstractMentat::thinkMouth()  // MOUTH
+{
     if (TIMER_Mouth > 0) {
         TIMER_Mouth--;
-    } else {
+    }
+    else {
         // still speaking
         if (TIMER_Speaking > 0) {
 
@@ -205,10 +219,12 @@ void cAbstractMentat::thinkMouth() {// MOUTH
                 // when mouth is shut, we wait a bit.
                 if (rnd(100) < 45) {
                     iMentatMouth += (1 + rnd(4));
-                } else {
+                }
+                else {
                     TIMER_Mouth = 25; // wait
                 }
-            } else {
+            }
+            else {
                 iMentatMouth += (1 + rnd(4));
             }
 
@@ -231,7 +247,8 @@ void cAbstractMentat::thinkMouth() {// MOUTH
                     iMentatMouth -= 5;
                 }
             }
-        } else {
+        }
+        else {
             iMentatMouth = 0; // when there is no sentence, do not animate mouth
         }
 
@@ -242,7 +259,8 @@ void cAbstractMentat::thinkMouth() {// MOUTH
 
 }
 
-void cAbstractMentat::draw() {
+void cAbstractMentat::draw()
+{
     rectfill(bmp_screen, offsetX, offsetY, offsetX + 640, offsetY + 480, makecol(0,0,0));
     rect(bmp_screen, offsetX-1, offsetY-1, offsetX + 641, offsetY + 481, makecol(64, 64,89));
     rect(bmp_screen, offsetX-2, offsetY-2, offsetX + 642, offsetY + 482, makecol(40,40,60));
@@ -280,15 +298,17 @@ void cAbstractMentat::draw() {
     }
 }
 
-BITMAP *cAbstractMentat::getBackgroundBitmap() const {
+BITMAP *cAbstractMentat::getBackgroundBitmap() const
+{
     if (iBackgroundFrame < 0) return nullptr;
     return (BITMAP *) gfxmentat[iBackgroundFrame].dat;
 }
 
-void cAbstractMentat::draw_movie() {
+void cAbstractMentat::draw_movie()
+{
     if (gfxmovie == nullptr) return;
     if (iMovieFrame < 0) return;
-    
+
     // drawing only, circulating is done in think function
     int movieTopleftX = offsetX + 256;
     int movieTopleftY = offsetY + 120;
@@ -296,7 +316,8 @@ void cAbstractMentat::draw_movie() {
     draw_sprite(bmp_screen, (BITMAP *)gfxmovie[iMovieFrame].dat, movieTopleftX, movieTopleftY);
 }
 
-void cAbstractMentat::interact() {
+void cAbstractMentat::interact()
+{
     if (state == INIT) return;
     if (state == SPEAKING) {
         if (game.getMouse()->isLeftButtonClicked()) {
@@ -321,16 +342,19 @@ void cAbstractMentat::interact() {
     }
 }
 
-void cAbstractMentat::initSentences() {
+void cAbstractMentat::initSentences()
+{
     memset(sentence, 0, sizeof(sentence));
 }
 
-void cAbstractMentat::setSentence(int i, const char *text) {
+void cAbstractMentat::setSentence(int i, const char *text)
+{
     sprintf(sentence[i], "%s", text);
     logbook(fmt::format("Sentence[{}]={}", i, text));
 }
 
-void cAbstractMentat::loadScene(const std::string& scene) {
+void cAbstractMentat::loadScene(const std::string &scene)
+{
     gfxmovie = nullptr;
 
     char filename[255];
@@ -350,36 +374,42 @@ void cAbstractMentat::loadScene(const std::string& scene) {
     logbook(fmt::format("Failed to load scene [{}]", filename));
 }
 
-void cAbstractMentat::speak() {
+void cAbstractMentat::speak()
+{
     TIMER_Speaking = 0;
     TIMER_Mouth = 0;
     iMentatSentence = -2; // ugh
     state = SPEAKING;
 }
 
-void cAbstractMentat::buildLeftButton(BITMAP *bmp, int x, int y) {
+void cAbstractMentat::buildLeftButton(BITMAP *bmp, int x, int y)
+{
     delete leftButton;
     leftButton = new cRectangle(offsetX + x, offsetY + y, bmp->w, bmp->h);
     leftButtonBmp = bmp;
 }
 
-void cAbstractMentat::buildRightButton(BITMAP *bmp, int x, int y) {
+void cAbstractMentat::buildRightButton(BITMAP *bmp, int x, int y)
+{
     delete rightButton;
     rightButton = new cRectangle(offsetX + x, offsetY + y, bmp->w, bmp->h);
     rightButtonBmp = bmp;
 }
 
-void cAbstractMentat::resetSpeak() {
+void cAbstractMentat::resetSpeak()
+{
     speak();
 }
 
-void cAbstractMentat::onNotifyMouseEvent(const s_MouseEvent &event) {
+void cAbstractMentat::onNotifyMouseEvent(const s_MouseEvent &event)
+{
     if (m_guiBtnToMissionSelect) {
         m_guiBtnToMissionSelect->onNotifyMouseEvent(event);
     }
 }
 
-void cAbstractMentat::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
+void cAbstractMentat::onNotifyKeyboardEvent(const cKeyboardEvent &event)
+{
     if (m_guiBtnToMissionSelect) {
         m_guiBtnToMissionSelect->onNotifyKeyboardEvent(event);
     }

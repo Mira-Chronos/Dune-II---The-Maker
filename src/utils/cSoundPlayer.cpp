@@ -31,8 +31,9 @@ constexpr int kMaxVolume = 220;
 }
 
 class cSoundData {
-  public:
-    cSoundData() {
+public:
+    cSoundData()
+    {
         auto logger = cLogger::getInstance();
 
         gfxaudio = load_datafile("data/gfxaudio.dat");
@@ -40,27 +41,32 @@ class cSoundData {
             static auto msg = "Could not hook/load datafile: gfxaudio.dat.";
             logger->log(LOG_ERROR, COMP_SOUND, "Initialization", msg, OUTC_FAILED);
             throw std::runtime_error(msg);
-        } else {
+        }
+        else {
             logger->log(LOG_INFO, COMP_SOUND, "Initialization", "Hooked datafile: gfxaudio.dat.", OUTC_SUCCESS);
         }
     }
 
-    const SAMPLE* getSample(int sampleId) const {
-        return static_cast<const SAMPLE*>(gfxaudio[sampleId].dat);
+    const SAMPLE *getSample(int sampleId) const
+    {
+        return static_cast<const SAMPLE *>(gfxaudio[sampleId].dat);
     }
 
-    MIDI* getMusic(int musicId) const {
-        return static_cast<MIDI*>(gfxaudio[musicId].dat);
+    MIDI *getMusic(int musicId) const
+    {
+        return static_cast<MIDI *>(gfxaudio[musicId].dat);
     }
 
-    const DATAFILE* gfxaudio;
+    const DATAFILE *gfxaudio;
 };
 
-cSoundPlayer::cSoundPlayer(const cPlatformLayerInit& init) : cSoundPlayer(init, kAllegroMaxNrVoices) {
+cSoundPlayer::cSoundPlayer(const cPlatformLayerInit &init) : cSoundPlayer(init, kAllegroMaxNrVoices)
+{
 }
 
-cSoundPlayer::cSoundPlayer(const cPlatformLayerInit&, int maxNrVoices)
-        : soundData(std::make_unique<cSoundData>()) {
+cSoundPlayer::cSoundPlayer(const cPlatformLayerInit &, int maxNrVoices)
+    : soundData(std::make_unique<cSoundData>())
+{
     // The platform layer init object is not used here, but since it needs to be passed, it tells
     // the caller that the initialization needs to be performed first.
 
@@ -80,8 +86,7 @@ cSoundPlayer::cSoundPlayer(const cPlatformLayerInit&, int maxNrVoices)
 
         reserve_voices(nr_voices, 0); // Reserve nothing for MIDI, assume it will "steal" from the digi voices
 
-        if (install_sound(DIGI_AUTODETECT, MIDI_AUTODETECT, nullptr) == 0)
-        {
+        if (install_sound(DIGI_AUTODETECT, MIDI_AUTODETECT, nullptr) == 0) {
             auto msg = fmt::format("Successfully installed sound. {} voices reserved", nr_voices);
             logger->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_SUCCESS);
 
@@ -101,7 +106,8 @@ cSoundPlayer::cSoundPlayer(const cPlatformLayerInit&, int maxNrVoices)
     set_volume(kMaxVolume, kMaxVolume / 2);
 }
 
-cSoundPlayer::~cSoundPlayer() {
+cSoundPlayer::~cSoundPlayer()
+{
     for (int voice : voices) {
         if (voice != kNoVoice) {
             deallocate_voice(voice);
@@ -109,13 +115,15 @@ cSoundPlayer::~cSoundPlayer() {
     }
 }
 
-int cSoundPlayer::getMaxVolume() {
+int cSoundPlayer::getMaxVolume()
+{
     // TODO: This will become configurable (so you can set your own max volume for sounds, etc)
     return kAllegroMaxVolume;
 }
 
-void cSoundPlayer::think() {
-    for (int& voice : voices) {
+void cSoundPlayer::think()
+{
+    for (int &voice : voices) {
         if (voice == kNoVoice) {
             continue;
         }
@@ -128,11 +136,13 @@ void cSoundPlayer::think() {
     }
 }
 
-void cSoundPlayer::playSound(int sampleId) {
+void cSoundPlayer::playSound(int sampleId)
+{
     playSound(sampleId, kAllegroMaxVolume);
 }
 
-void cSoundPlayer::playSound(int sampleId, int vol) {
+void cSoundPlayer::playSound(int sampleId, int vol)
+{
     if (vol <= 0) {
         return;
     }
@@ -151,10 +161,10 @@ void cSoundPlayer::playSound(int sampleId, int vol) {
 
     vol = std::clamp(vol, 0, kAllegroMaxVolume);
 
-    const SAMPLE* sample = soundData->getSample(sampleId);
-	assert(sample);
+    const SAMPLE *sample = soundData->getSample(sampleId);
+    assert(sample);
 
-	*voice = allocate_voice(sample);
+    *voice = allocate_voice(sample);
     assert(*voice != kNoVoiceAvailable);
 
     voice_set_playmode(*voice, PLAYMODE_PLAY | PLAYMODE_FORWARD); // The default
@@ -163,24 +173,29 @@ void cSoundPlayer::playSound(int sampleId, int vol) {
     voice_start(*voice);
 }
 
-void cSoundPlayer::playVoice(int sampleId, int house) {
-	if (house == HARKONNEN) {
-		sampleId += 1;
-	} else if (house == ORDOS) {
-		sampleId += 2;
-	}
+void cSoundPlayer::playVoice(int sampleId, int house)
+{
+    if (house == HARKONNEN) {
+        sampleId += 1;
+    }
+    else if (house == ORDOS) {
+        sampleId += 2;
+    }
 
     playSound(sampleId);
 }
 
-void cSoundPlayer::playMusic(int sampleId) {
+void cSoundPlayer::playMusic(int sampleId)
+{
     play_midi(soundData->getMusic(sampleId), kNoLoop);
 }
 
-bool cSoundPlayer::isMusicPlaying() const {
+bool cSoundPlayer::isMusicPlaying() const
+{
     return midi_pos > -1;
 }
 
-void cSoundPlayer::stopMusic() {
+void cSoundPlayer::stopMusic()
+{
     stop_midi();
 }

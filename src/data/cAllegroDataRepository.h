@@ -29,7 +29,7 @@ public:
     bool loadBitmapFromDataFileAt(int index, BITMAP *bmp);
     bool loadBitmapFromDataFileGfxDataAt(int index, int indexAtDataFile);
 
-    sBitmap * getBitmapAt(int index);
+    sBitmap *getBitmapAt(int index);
 
 private:
     int findAvailableSlot();

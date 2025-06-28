@@ -15,7 +15,8 @@
 #include <vector>
 #include <algorithm>
 
-cPlayer::cPlayer() {
+cPlayer::cPlayer()
+{
     itemBuilder = nullptr;
     orderProcesser = nullptr;
     sidebar = nullptr;
@@ -25,7 +26,7 @@ cPlayer::cPlayer() {
     bmp_flag_small = nullptr;
     // no log(), because we can't assume player is fully initialized yet
     logbook(fmt::format("MAX_STRUCTURE_BMPS=[{}], sizeof bmp_structure={}, sizeof(BITMAP *)={}",
-            MAX_STRUCTURE_BMPS, sizeof(bmp_structure), sizeof(BITMAP *)));
+                        MAX_STRUCTURE_BMPS, sizeof(bmp_structure), sizeof(BITMAP *)));
     memset(bmp_structure, 0, sizeof(bmp_structure));
     memset(bmp_unit, 0, sizeof(bmp_unit));
     memset(bmp_unit_top, 0, sizeof(bmp_unit_top));
@@ -33,7 +34,8 @@ cPlayer::cPlayer() {
     m_autoSlabStructures = false;
 }
 
-cPlayer::~cPlayer() {
+cPlayer::~cPlayer()
+{
     if (itemBuilder) {
         delete itemBuilder;
     }
@@ -59,21 +61,24 @@ cPlayer::~cPlayer() {
 //    destroyAllegroBitmaps();
 }
 
-void cPlayer::destroyAllegroBitmaps() {
+void cPlayer::destroyAllegroBitmaps()
+{
     destroy_bitmap(bmp_flag);
     destroy_bitmap(bmp_flag_small);
     clearStructureTypeBitmaps();
     clearUnitTypeBitmaps();
 }
 
-void cPlayer::clearStructureTypeBitmaps() {
+void cPlayer::clearStructureTypeBitmaps()
+{
     for (int i = 0; i < MAX_STRUCTURE_BMPS; i++) {
         if (bmp_structure[i]) {
 //            char msg[255];
 //            sprintf(msg, "clearStructureTypeBitmaps: Destroying bmp_structure for index [%d].", i);
 //            log(msg);
             destroy_bitmap(bmp_structure[i]);
-        } else {
+        }
+        else {
 //            char msg[255];
 //            sprintf(msg, "clearStructureTypeBitmaps: Index [%d] is null.", i);
 //            log(msg);
@@ -82,11 +87,13 @@ void cPlayer::clearStructureTypeBitmaps() {
     }
 }
 
-void cPlayer::setFocusCell(int cll) {
+void cPlayer::setFocusCell(int cll)
+{
     this->focusCell_ = cll;
 }
 
-void cPlayer::clearUnitTypeBitmaps() {
+void cPlayer::clearUnitTypeBitmaps()
+{
     for (int i = 0; i < MAX_UNITTYPES; i++) {
         if (bmp_unit[i]) {
             if (game.isDebugMode()) {
@@ -110,7 +117,8 @@ void cPlayer::clearUnitTypeBitmaps() {
     }
 }
 
-void cPlayer::setSideBar(cSideBar *theSideBar) {
+void cPlayer::setSideBar(cSideBar *theSideBar)
+{
     assert(theSideBar);
 
     // delete old reference
@@ -121,7 +129,8 @@ void cPlayer::setSideBar(cSideBar *theSideBar) {
     sidebar = theSideBar;
 }
 
-void cPlayer::setItemBuilder(cItemBuilder *theItemBuilder) {
+void cPlayer::setItemBuilder(cItemBuilder *theItemBuilder)
+{
     assert(theItemBuilder);
 
     // delete old reference
@@ -132,7 +141,8 @@ void cPlayer::setItemBuilder(cItemBuilder *theItemBuilder) {
     itemBuilder = theItemBuilder;
 }
 
-void cPlayer::setOrderProcesser(cOrderProcesser *theOrderProcesser) {
+void cPlayer::setOrderProcesser(cOrderProcesser *theOrderProcesser)
+{
     assert(theOrderProcesser);
 
     if (orderProcesser) {
@@ -142,7 +152,8 @@ void cPlayer::setOrderProcesser(cOrderProcesser *theOrderProcesser) {
     orderProcesser = theOrderProcesser;
 }
 
-void cPlayer::setBuildingListUpdater(cBuildingListUpdater *theBuildingListUpgrader) {
+void cPlayer::setBuildingListUpdater(cBuildingListUpdater *theBuildingListUpgrader)
+{
     assert(theBuildingListUpgrader);
 
     // delete old reference
@@ -153,7 +164,8 @@ void cPlayer::setBuildingListUpdater(cBuildingListUpdater *theBuildingListUpgrad
     buildingListUpdater = theBuildingListUpgrader;
 }
 
-void cPlayer::setGameControlsContext(cGameControlsContext *theGameControlsContext) {
+void cPlayer::setGameControlsContext(cGameControlsContext *theGameControlsContext)
+{
     assert(theGameControlsContext);
 
     // delete old reference
@@ -164,7 +176,8 @@ void cPlayer::setGameControlsContext(cGameControlsContext *theGameControlsContex
     gameControlsContext = theGameControlsContext;
 }
 
-void cPlayer::init(int id, brains::cPlayerBrain *brain) {
+void cPlayer::init(int id, brains::cPlayerBrain *brain)
+{
     if (id < 0 || id >= MAX_PLAYERS) {
         // no log(), as house still has to be set up
         logbook(fmt::format("Error initializing player, id {} is not valid.", id));
@@ -216,7 +229,8 @@ void cPlayer::init(int id, brains::cPlayerBrain *brain) {
  * Sets house value , but also sets up difficulty settings + creates bitmaps for that corresponding house
  * @param iHouse
  */
-void cPlayer::setHouse(int iHouse) {
+void cPlayer::setHouse(int iHouse)
+{
     int currentHouse = house;
     // not yet set up house properly.. so use logbook instead of log()
     logbook(fmt::format("cPlayer[{}]::setHouse - Current house is [{}/{}], setting house to [{}/{}]",
@@ -320,7 +334,8 @@ void cPlayer::setHouse(int iHouse) {
     }
 }
 
-int cPlayer::getEmblemBackgroundColorForHouse(int houseId) {
+int cPlayer::getEmblemBackgroundColorForHouse(int houseId)
+{
     switch (houseId) {
         case ATREIDES:
             return makecol(8, 12, 89);
@@ -335,19 +350,23 @@ int cPlayer::getEmblemBackgroundColorForHouse(int houseId) {
     }
 }
 
-bool cPlayer::hasAlmostReachMaxSpiceStorageCapacity() const {
+bool cPlayer::hasAlmostReachMaxSpiceStorageCapacity() const
+{
     return !bEnoughSpiceCapacityToStoreCredits(250);
 }
 
-bool cPlayer::bEnoughSpiceCapacityToStoreCredits() const {
+bool cPlayer::bEnoughSpiceCapacityToStoreCredits() const
+{
     return bEnoughSpiceCapacityToStoreCredits(0);
 }
 
-bool cPlayer::bEnoughSpiceCapacityToStoreCredits(int threshold) const {
+bool cPlayer::bEnoughSpiceCapacityToStoreCredits(int threshold) const
+{
     return (maxCredits_ - threshold) > credits;
 }
 
-bool cPlayer::bEnoughPower() const {
+bool cPlayer::bEnoughPower() const
+{
     if (!game.m_skirmish) {
         // AI cheats on power
         if (!m_Human) {
@@ -361,11 +380,13 @@ bool cPlayer::bEnoughPower() const {
     return powerProduce_ >= powerUsage_;
 }
 
-bool cPlayer::hasRadarAndEnoughPower() const {
+bool cPlayer::hasRadarAndEnoughPower() const
+{
     return getAmountOfStructuresForType(RADAR) > 0 && bEnoughPower();
 }
 
-std::string cPlayer::asString() const {
+std::string cPlayer::asString() const
+{
     return fmt::format("Player [id={}, human={}, sidebar={}]", this->id, this->m_Human, fmt::ptr(this->sidebar));
 }
 
@@ -375,7 +396,8 @@ std::string cPlayer::asString() const {
  * @param structureType
  * @return
  */
-int cPlayer::getAmountOfStructuresForType(int structureType) const {
+int cPlayer::getAmountOfStructuresForType(int structureType) const
+{
     if (structureType < 0 || structureType > RTURRET) return -1;
     return iStructures[structureType];
 }
@@ -387,12 +409,14 @@ int cPlayer::getAmountOfStructuresForType(int structureType) const {
  * @param unitType
  * @return
  */
-int cPlayer::getAmountOfUnitsForType(int unitType) const {
+int cPlayer::getAmountOfUnitsForType(int unitType) const
+{
     if (unitType < 0 || unitType > MAX_UNITTYPES) return -1;
     return getAllMyUnitsForType(unitType).size();
 }
 
-void cPlayer::markUnitsForGroup(const int groupId) const {
+void cPlayer::markUnitsForGroup(const int groupId) const
+{
     // go over all units, and mark units for this group if selected.
     // and unmark them for the group when not/no longer selected.
     for (auto &pUnit : unit) {
@@ -410,7 +434,8 @@ void cPlayer::markUnitsForGroup(const int groupId) const {
     }
 }
 
-std::vector<int> cPlayer::getAllMyUnitsForGroupNr(const int groupId) const {
+std::vector<int> cPlayer::getAllMyUnitsForGroupNr(const int groupId) const
+{
     std::vector<int> ids = std::vector<int>();
     for (int i = 0; i < MAX_UNITS; i++) {
         cUnit &pUnit = unit[i];
@@ -426,7 +451,8 @@ std::vector<int> cPlayer::getAllMyUnitsForGroupNr(const int groupId) const {
     return ids;
 }
 
-std::vector<int> cPlayer::getAllMyUnitsWithinViewportRect(const cRectangle &rect) const {
+std::vector<int> cPlayer::getAllMyUnitsWithinViewportRect(const cRectangle &rect) const
+{
     std::vector<int> ids = std::vector<int>();
     for (int i = 0; i < MAX_UNITS; i++) {
         cUnit &pUnit = unit[i];
@@ -451,7 +477,8 @@ std::vector<int> cPlayer::getAllMyUnitsWithinViewportRect(const cRectangle &rect
  * @param unitTypes (vector of all unitTypes to check)
  * @return
  */
-int cPlayer::getAmountOfUnitsForType(std::vector<int> unitTypes) const {
+int cPlayer::getAmountOfUnitsForType(std::vector<int> unitTypes) const
+{
     int count = 0;
     for (int i = 0; i < MAX_UNITS; i++) {
         cUnit &cUnit = unit[i];
@@ -471,7 +498,8 @@ int cPlayer::getAmountOfUnitsForType(std::vector<int> unitTypes) const {
  * @param index
  * @return
  */
-BITMAP *cPlayer::getStructureBitmap(int index) {
+BITMAP *cPlayer::getStructureBitmap(int index)
+{
     if (bmp_structure[index]) {
         return bmp_structure[index];
     }
@@ -484,15 +512,18 @@ BITMAP *cPlayer::getStructureBitmap(int index) {
  * @param index
  * @return
  */
-BITMAP *cPlayer::getStructureBitmapFlash(int index) {
+BITMAP *cPlayer::getStructureBitmapFlash(int index)
+{
     return getStructureBitmap(MAX_STRUCTURETYPES + index); // by convention flash bmp's are stored starting at MAX + index
 }
 
-BITMAP *cPlayer::getFlagBitmap() {
+BITMAP *cPlayer::getFlagBitmap()
+{
     return bmp_flag;
 }
 
-BITMAP *cPlayer::getFlagSmallBitmap() {
+BITMAP *cPlayer::getFlagSmallBitmap()
+{
     return bmp_flag_small;
 }
 
@@ -502,7 +533,8 @@ BITMAP *cPlayer::getFlagSmallBitmap() {
  * @param index
  * @return
  */
-BITMAP *cPlayer::getUnitBitmap(int index) {
+BITMAP *cPlayer::getUnitBitmap(int index)
+{
     if (bmp_unit[index]) {
         return bmp_unit[index];
     }
@@ -515,7 +547,8 @@ BITMAP *cPlayer::getUnitBitmap(int index) {
  * @param index
  * @return
  */
-BITMAP *cPlayer::getUnitTopBitmap(int index) {
+BITMAP *cPlayer::getUnitTopBitmap(int index)
+{
     if (bmp_unit_top[index]) {
         return bmp_unit_top[index];
     }
@@ -528,7 +561,8 @@ BITMAP *cPlayer::getUnitTopBitmap(int index) {
  * @param index
  * @return
  */
-BITMAP *cPlayer::getUnitShadowBitmap(int index, int bodyFacing, int animationFrame) {
+BITMAP *cPlayer::getUnitShadowBitmap(int index, int bodyFacing, int animationFrame)
+{
     if (sUnitInfo[index].shadow) {
         int bmp_width = sUnitInfo[index].bmp_width;
         int bmp_height = sUnitInfo[index].bmp_height;
@@ -551,36 +585,43 @@ BITMAP *cPlayer::getUnitShadowBitmap(int index, int bodyFacing, int animationFra
     return nullptr;
 }
 
-bool cPlayer::hasWor() const {
+bool cPlayer::hasWor() const
+{
     return iStructures[WOR] > 0;
 }
 
-bool cPlayer::hasBarracks() const {
+bool cPlayer::hasBarracks() const
+{
     return iStructures[BARRACKS] > 0;
 }
 
-bool cPlayer::hasAtleastOneStructure(int structureType) const {
+bool cPlayer::hasAtleastOneStructure(int structureType) const
+{
     if (structureType < 0) return false;
     if (structureType >= MAX_STRUCTURETYPES) return false;
 
     return iStructures[structureType] > 0;
 }
 
-bool cPlayer::hasEnoughCreditsFor(float requestedAmount) const {
+bool cPlayer::hasEnoughCreditsFor(float requestedAmount) const
+{
     return credits >= requestedAmount;
 }
 
-bool cPlayer::hasEnoughCreditsForUnit(int unitType) {
+bool cPlayer::hasEnoughCreditsForUnit(int unitType)
+{
     if (unitType < 0 || unitType >= MAX_UNITTYPES) return false;
     return this->credits >= sUnitInfo[unitType].cost;
 }
 
-bool cPlayer::hasEnoughCreditsForStructure(int structureType) {
+bool cPlayer::hasEnoughCreditsForStructure(int structureType)
+{
     if (structureType < 0 || structureType >= MAX_STRUCTURETYPES) return false;
     return this->credits >= sStructureInfo[structureType].cost;
 }
 
-bool cPlayer::hasEnoughCreditsForUpgrade(int upgradeType) {
+bool cPlayer::hasEnoughCreditsForUpgrade(int upgradeType)
+{
     if (upgradeType < 0 || upgradeType >= MAX_UPGRADETYPES) return false;
     return this->credits >= sUpgradeInfo[upgradeType].cost;
 }
@@ -589,7 +630,8 @@ bool cPlayer::hasEnoughCreditsForUpgrade(int upgradeType) {
  * Returns house based fading/pulsating color
  * @return
  */
-int cPlayer::getHouseFadingColor() const {
+int cPlayer::getHouseFadingColor() const
+{
     int color = makecol(255, 255, 255);
     if (house == ATREIDES) {
         color = makecol(0, 0, 255);
@@ -609,7 +651,8 @@ int cPlayer::getHouseFadingColor() const {
  * Returns the error fading color (red to black pulsating)
  * @return
  */
-int cPlayer::getErrorFadingColor() const {
+int cPlayer::getErrorFadingColor() const
+{
     return game.getColorFadeSelectedRed(255, 0, 0);
 }
 
@@ -617,7 +660,8 @@ int cPlayer::getErrorFadingColor() const {
  * Returns the error fading color (red to black pulsating)
  * @return
  */
-int cPlayer::getPrimaryBuildingFadingColor() const {
+int cPlayer::getPrimaryBuildingFadingColor() const
+{
     return game.getColorFadeSelectedGreen(0, 255, 0);
 }
 
@@ -625,11 +669,13 @@ int cPlayer::getPrimaryBuildingFadingColor() const {
  * Returns the fading white color
  * @return
  */
-int cPlayer::getSelectFadingColor() const {
+int cPlayer::getSelectFadingColor() const
+{
     return game.getColorFadeSelected(255, 255, 255);
 }
 
-eHouseBitFlag cPlayer::getHouseBitFlag() {
+eHouseBitFlag cPlayer::getHouseBitFlag()
+{
     switch (house) {
         case ATREIDES:
             return eHouseBitFlag::Atreides;
@@ -646,7 +692,8 @@ eHouseBitFlag cPlayer::getHouseBitFlag() {
     }
 }
 
-void cPlayer::increaseStructureAmount(int structureType) {
+void cPlayer::increaseStructureAmount(int structureType)
+{
     if (structureType < 0) return;
     if (structureType >= MAX_STRUCTURETYPES) return;
     iStructures[structureType]++;
@@ -655,7 +702,8 @@ void cPlayer::increaseStructureAmount(int structureType) {
                     structureType, sStructureInfo[structureType].name, iStructures[structureType]));
 }
 
-void cPlayer::decreaseStructureAmount(int structureType) {
+void cPlayer::decreaseStructureAmount(int structureType)
+{
     if (structureType < 0) return;
     if (structureType >= MAX_STRUCTURETYPES) return;
 
@@ -665,32 +713,42 @@ void cPlayer::decreaseStructureAmount(int structureType) {
                     structureType, sStructureInfo[structureType].name, iStructures[structureType]));
 }
 
-std::string cPlayer::getHouseName() const {
+std::string cPlayer::getHouseName() const
+{
     return getHouseNameForId(house);
 }
 
-std::string cPlayer::getHouseNameForId(int house) {
+std::string cPlayer::getHouseNameForId(int house)
+{
     if (house == ATREIDES) {
         return "Atreides";
-    } else if (house == HARKONNEN) {
+    }
+    else if (house == HARKONNEN) {
         return "Harkonnen";
-    } else if (house == ORDOS) {
+    }
+    else if (house == ORDOS) {
         return "Ordos";
-    } else if (house == SARDAUKAR) {
+    }
+    else if (house == SARDAUKAR) {
         return "Sardaukar";
-    } else if (house == FREMEN) {
+    }
+    else if (house == FREMEN) {
         return "Fremen";
-    } else if (house == MERCENARY) {
+    }
+    else if (house == MERCENARY) {
         return "Mercenary";
-    } else if (house == GENERALHOUSE) {
+    }
+    else if (house == GENERALHOUSE) {
         return "Generalhouse (none)";
-    } else if (house == CORRINO) {
+    }
+    else if (house == CORRINO) {
         return "Corrino / House for worms";
     }
     return "Unknown !?";
 }
 
-void cPlayer::giveCredits(float amountToGive) {
+void cPlayer::giveCredits(float amountToGive)
+{
     credits += amountToGive;
 }
 
@@ -702,11 +760,13 @@ void cPlayer::giveCredits(float amountToGive) {
  * TODO: This can be done smarter because we receive notifications when a structure gets created/destroyed!
  * @return
  */
-std::vector<int> cPlayer::getAllMyStructuresAsId() {
+std::vector<int> cPlayer::getAllMyStructuresAsId()
+{
     return getAllMyStructuresAsIdForType(-1);
 }
 
-std::vector<int> cPlayer::getAllMyStructuresAsIdForType(int structureType) {
+std::vector<int> cPlayer::getAllMyStructuresAsIdForType(int structureType)
+{
     std::vector<int> ids = std::vector<int>();
     for (int i = 0; i < MAX_STRUCTURES; i++) {
         cAbstractStructure *abstractStructure = structure[i];
@@ -725,7 +785,8 @@ std::vector<int> cPlayer::getAllMyStructuresAsIdForType(int structureType) {
     return ids;
 }
 
-bool cPlayer::isSameTeamAs(const cPlayer *pPlayer) {
+bool cPlayer::isSameTeamAs(const cPlayer *pPlayer)
+{
     if (pPlayer == nullptr) return false;
     return pPlayer->iTeam == iTeam;
 }
@@ -733,34 +794,41 @@ bool cPlayer::isSameTeamAs(const cPlayer *pPlayer) {
 /**
  * Update player state
  */
-void cPlayer::update() {
+void cPlayer::update()
+{
     powerUsage_ = structureUtils.getTotalPowerUsageForPlayer(this);
     powerProduce_ = structureUtils.getTotalPowerOutForPlayer(this);
     // update spice capacity
     maxCredits_ = structureUtils.getTotalSpiceCapacityForPlayer(this);
 }
 
-int cPlayer::getCredits() {
+int cPlayer::getCredits()
+{
     return credits;
 }
 
-void cPlayer::setCredits(int credits) {
+void cPlayer::setCredits(int credits)
+{
     this->credits = credits;
 }
 
-void cPlayer::substractCredits(int amount) {
+void cPlayer::substractCredits(int amount)
+{
     credits -= amount;
 }
 
-float cPlayer::getMaxCredits() {
+float cPlayer::getMaxCredits()
+{
     return maxCredits_;
 }
 
-int cPlayer::getPowerProduced() {
+int cPlayer::getPowerProduced()
+{
     return powerProduce_;
 }
 
-int cPlayer::getPowerUsage() {
+int cPlayer::getPowerUsage()
+{
     return powerUsage_;
 }
 
@@ -768,7 +836,8 @@ int cPlayer::getPowerUsage() {
  * Gives the player credits, but caps at max spice/credits capacity.
  * @param amount
  */
-void cPlayer::dumpCredits(int amount) {
+void cPlayer::dumpCredits(int amount)
+{
     giveCredits(amount);
     if (credits > maxCredits_) {
         credits = maxCredits_;
@@ -778,7 +847,8 @@ void cPlayer::dumpCredits(int amount) {
 /**
  * Think function, called every 100ms.
  */
-void cPlayer::think() {
+void cPlayer::think()
+{
     if (brain_) {
         brain_->think();
     }
@@ -787,7 +857,8 @@ void cPlayer::think() {
 /**
  * Think function, called every 5 ms.
  */
-void cPlayer::thinkFast() {
+void cPlayer::thinkFast()
+{
     if (sidebar) {
         sidebar->think();
     }
@@ -802,16 +873,19 @@ void cPlayer::thinkFast() {
 
     // remove notifications no longer visible
     notifications.erase(
-            std::remove_if(
-                    notifications.begin(),
-                    notifications.end(),
-                    [](cPlayerNotification m) { return !m.isVisible(); }),
-            notifications.end()
+        std::remove_if(
+            notifications.begin(),
+            notifications.end(),
+    [](cPlayerNotification m) {
+        return !m.isVisible();
+    }),
+    notifications.end()
     );
 }
 
 
-void cPlayer::setBrain(brains::cPlayerBrain *brain) {
+void cPlayer::setBrain(brains::cPlayerBrain *brain)
+{
     // delete old brain object if it was set before
     if (brain_) {
         delete brain_;
@@ -820,12 +894,14 @@ void cPlayer::setBrain(brains::cPlayerBrain *brain) {
     brain_ = brain;
 }
 
-bool cPlayer::isStructureTypeAvailableForConstruction(int iStructureType) const {
+bool cPlayer::isStructureTypeAvailableForConstruction(int iStructureType) const
+{
     cBuildingListItem *pItem = sidebar->getBuildingListItem(eListType::LIST_CONSTYARD, iStructureType);
     return pItem != nullptr;
 }
 
-bool cPlayer::canBuildUnitType(int iUnitType) const {
+bool cPlayer::canBuildUnitType(int iUnitType) const
+{
     eListType listType = sUnitInfo[iUnitType].listType;
     cBuildingListItem *pItem = sidebar->getBuildingListItem(listType, iUnitType);
     bool result = pItem != nullptr;
@@ -833,7 +909,8 @@ bool cPlayer::canBuildUnitType(int iUnitType) const {
     return result;
 }
 
-bool cPlayer::canBuildSpecialType(int iType) const {
+bool cPlayer::canBuildSpecialType(int iType) const
+{
     eListType listType = sSpecialInfo[iType].listType;
     cBuildingListItem *pItem = sidebar->getBuildingListItem(listType, iType);
 
@@ -844,7 +921,8 @@ bool cPlayer::canBuildSpecialType(int iType) const {
     return result;
 }
 
-int cPlayer::getStructureTypeBeingBuilt() const {
+int cPlayer::getStructureTypeBeingBuilt() const
+{
     cBuildingListItem *pItem = getStructureBuildingListItemBeingBuilt();
     if (pItem) {
         return pItem->getBuildId();
@@ -852,7 +930,8 @@ int cPlayer::getStructureTypeBeingBuilt() const {
     return -1;
 }
 
-cBuildingListItem *cPlayer::getStructureBuildingListItemBeingBuilt() const {
+cBuildingListItem *cPlayer::getStructureBuildingListItemBeingBuilt() const
+{
     return itemBuilder->getListItemWhichIsBuilding(eListType::LIST_CONSTYARD, 0);
 }
 
@@ -864,7 +943,8 @@ cBuildingListItem *cPlayer::getStructureBuildingListItemBeingBuilt() const {
  * @param iUnitType
  * @return
  */
-bool cPlayer::isBuildingSomethingInSameListSubListAsUnitType(int iUnitType) const {
+bool cPlayer::isBuildingSomethingInSameListSubListAsUnitType(int iUnitType) const
+{
     s_UnitInfo &p = sUnitInfo[iUnitType];
     eListType listType = p.listType;
     int subListId = p.subListId;
@@ -873,7 +953,8 @@ bool cPlayer::isBuildingSomethingInSameListSubListAsUnitType(int iUnitType) cons
 }
 
 bool cPlayer::isBuildingAnythingForListAndSublist(eListType listType,
-                                                  int subListId) const {
+        int subListId) const
+{
     return itemBuilder->isAnythingBeingBuiltForListType(listType, subListId);
 }
 
@@ -885,7 +966,8 @@ bool cPlayer::isBuildingAnythingForListAndSublist(eListType listType,
  * @param iStructureType
  * @return
  */
-cBuildingListItem *cPlayer::isUpgradeAvailableToGrantStructure(int iStructureType) const {
+cBuildingListItem *cPlayer::isUpgradeAvailableToGrantStructure(int iStructureType) const
+{
     return isUpgradeAvailableToGrant(STRUCTURE, iStructureType);
 }
 
@@ -897,7 +979,8 @@ cBuildingListItem *cPlayer::isUpgradeAvailableToGrantStructure(int iStructureTyp
  * @param iUnitTYpe
  * @return
  */
-cBuildingListItem *cPlayer::isUpgradeAvailableToGrantUnit(int iUnitType) const {
+cBuildingListItem *cPlayer::isUpgradeAvailableToGrantUnit(int iUnitType) const
+{
     return isUpgradeAvailableToGrant(UNIT, iUnitType);
 }
 
@@ -909,7 +992,8 @@ cBuildingListItem *cPlayer::isUpgradeAvailableToGrantUnit(int iUnitType) const {
  * @param providesTypeId (ex: QUAD, TANK, RTURRET, etc)
  * @return
  */
-cBuildingListItem *cPlayer::isUpgradeAvailableToGrant(eBuildType providesType, int providesTypeId) const {
+cBuildingListItem *cPlayer::isUpgradeAvailableToGrant(eBuildType providesType, int providesTypeId) const
+{
     cBuildingList *pList = sidebar->getList(eListType::LIST_UPGRADES);
     for (int i = 0; i < MAX_ITEMS; i++) {
         cBuildingListItem *pItem = pList->getItem(i);
@@ -931,7 +1015,8 @@ cBuildingListItem *cPlayer::isUpgradeAvailableToGrant(eBuildType providesType, i
  * @param sublistId
  * @return
  */
-cBuildingListItem *cPlayer::isUpgradingList(eListType listType, int sublistId) const {
+cBuildingListItem *cPlayer::isUpgradingList(eListType listType, int sublistId) const
+{
     int listId = eListTypeAsInt(listType);
     cBuildingList *upgradesList = sidebar->getList(eListType::LIST_UPGRADES);
     if (upgradesList == nullptr) {
@@ -956,18 +1041,21 @@ cBuildingListItem *cPlayer::isUpgradingList(eListType listType, int sublistId) c
     return nullptr;
 }
 
-cBuildingListItem *cPlayer::isUpgradingConstyard() const {
+cBuildingListItem *cPlayer::isUpgradingConstyard() const
+{
     return isUpgradingList(eListType::LIST_CONSTYARD, 0);
 }
 
 /**
  * Returns true if anything is built from ConstYard
  */
-cBuildingListItem *cPlayer::isBuildingStructure() const {
+cBuildingListItem *cPlayer::isBuildingStructure() const
+{
     return itemBuilder->getListItemWhichIsBuilding(eListType::LIST_CONSTYARD, 0);
 }
 
-bool cPlayer::startBuildingUnit(int iUnitType) const {
+bool cPlayer::startBuildingUnit(int iUnitType) const
+{
     s_UnitInfo &unitType = sUnitInfo[iUnitType];
     eListType listType = unitType.listType;
     bool startedBuilding = sidebar->startBuildingItemIfOk(listType, iUnitType);
@@ -980,7 +1068,8 @@ bool cPlayer::startBuildingUnit(int iUnitType) const {
     return startedBuilding;
 }
 
-bool cPlayer::startBuildingStructure(int iStructureType) const {
+bool cPlayer::startBuildingStructure(int iStructureType) const
+{
     eListType listType = eListType::LIST_CONSTYARD;
 
     bool startedBuilding = sidebar->startBuildingItemIfOk(listType, iStructureType);
@@ -993,7 +1082,8 @@ bool cPlayer::startBuildingStructure(int iStructureType) const {
     return startedBuilding;
 }
 
-bool cPlayer::startBuildingSpecial(int iSpecialType) const {
+bool cPlayer::startBuildingSpecial(int iSpecialType) const
+{
     eListType listType = eListType::LIST_PALACE;
 
     bool startedBuilding = sidebar->startBuildingItemIfOk(listType, iSpecialType);
@@ -1006,14 +1096,15 @@ bool cPlayer::startBuildingSpecial(int iSpecialType) const {
     return startedBuilding;
 }
 
-bool cPlayer::startUpgrading(int iUpgradeType) const {
+bool cPlayer::startUpgrading(int iUpgradeType) const
+{
     eListType listType = eListType::LIST_UPGRADES;
     bool startedBuilding = sidebar->startBuildingItemIfOk(listType, iUpgradeType);
 
     if (game.isDebugMode()) {
         const std::string result = startedBuilding ? "SUCCESS" : "FALSE";
         log(fmt::format("Wanting to start upgrade [{}] iUpgradeType = [{}], with listType[{}] - {}",
-                    sUpgradeInfo[iUpgradeType].description, iUpgradeType, listType, result));
+                        sUpgradeInfo[iUpgradeType].description, iUpgradeType, listType, result));
     }
     return startedBuilding;
 }
@@ -1021,14 +1112,16 @@ bool cPlayer::startUpgrading(int iUpgradeType) const {
 /**
  * Returns true if anything is built and awaiting placement from ConstYard
  */
-bool cPlayer::isBuildingStructureAwaitingPlacement() const {
+bool cPlayer::isBuildingStructureAwaitingPlacement() const
+{
     return itemBuilder->isAnythingBeingBuiltForListIdAwaitingPlacement(eListType::LIST_CONSTYARD, 0);
 }
 
 /**
  * Returns true if anything is built & awaiting deployment from Palace
  */
-bool cPlayer::isSpecialAwaitingPlacement() const {
+bool cPlayer::isSpecialAwaitingPlacement() const
+{
     return itemBuilder->isAnythingBeingBuiltForListIdAwaitingDeployment(eListType::LIST_PALACE, 0);
 }
 
@@ -1036,7 +1129,8 @@ bool cPlayer::isSpecialAwaitingPlacement() const {
  *
  * @return
  */
-cBuildingListItem * cPlayer::getSpecialAwaitingPlacement() const {
+cBuildingListItem *cPlayer::getSpecialAwaitingPlacement() const
+{
     return itemBuilder->getListItemWhichIsAwaitingDeployment(eListType::LIST_PALACE, 0);
 }
 
@@ -1052,7 +1146,8 @@ cBuildingListItem * cPlayer::getSpecialAwaitingPlacement() const {
  * @param structureType
  * @return
  */
-int cPlayer::findCellToPlaceStructure(int structureType) {
+int cPlayer::findCellToPlaceStructure(int structureType)
+{
     // find place (fast, if possible), where to place it
     // ignore any units (we can move them out of the way). But do take
     // terrain and other structures into consideration!
@@ -1064,7 +1159,7 @@ int cPlayer::findCellToPlaceStructure(int structureType) {
     int iHeight = sStructureInfo[structureType].bmp_height / TILESIZE_HEIGHT_PIXELS;
 
     for (auto &id : allMyStructuresAsId) {
-        cAbstractStructure * aStructure = structure[id];
+        cAbstractStructure *aStructure = structure[id];
 
         // go around any structure, and try to find a cell where we can place a structure.
         int iStartX = map.getCellX(aStructure->getCell());
@@ -1167,7 +1262,8 @@ int cPlayer::findCellToPlaceStructure(int structureType) {
 
             // for now pick random position, but in the future do something more smart
             std::random_shuffle(potentialCells.begin(), potentialCells.end());
-        } else {
+        }
+        else {
             // found one, shuffle, and then return the first
             std::random_shuffle(potentialCells.begin(), potentialCells.end());
         }
@@ -1177,7 +1273,8 @@ int cPlayer::findCellToPlaceStructure(int structureType) {
     return -1;
 }
 
-eCantBuildReason cPlayer::canBuildUnit(int iUnitType, bool checkIfAffordable) {
+eCantBuildReason cPlayer::canBuildUnit(int iUnitType, bool checkIfAffordable)
+{
     // Once known, a check will be made to see if the AI has a structure to produce that
     // unit type. If not, it will return false.
     log(fmt::format("canBuildUnit: Wanting to build iUnitType = [{}(={})] allowed?...", iUnitType, sUnitInfo[iUnitType].name));
@@ -1226,7 +1323,8 @@ eCantBuildReason cPlayer::canBuildUnit(int iUnitType, bool checkIfAffordable) {
     return eCantBuildReason::NONE;
 }
 
-eCantBuildReason cPlayer::canBuildSpecial(int iType) {
+eCantBuildReason cPlayer::canBuildSpecial(int iType)
+{
     // Once known, a check will be made to see if the AI has a structure to produce that
     // unit type. If not, it will return false.
     s_SpecialInfo &special = sSpecialInfo[iType];
@@ -1259,15 +1357,18 @@ eCantBuildReason cPlayer::canBuildSpecial(int iType) {
     return eCantBuildReason::NONE;
 }
 
-eCantBuildReason cPlayer::canBuildUnit(int iUnitType) {
+eCantBuildReason cPlayer::canBuildUnit(int iUnitType)
+{
     return canBuildUnit(iUnitType, true);
 }
 
-bool cPlayer::canBuildUnitBool(int iUnitType) {
+bool cPlayer::canBuildUnitBool(int iUnitType)
+{
     return canBuildUnit(iUnitType, false) == eCantBuildReason::NONE;
 }
 
-int cPlayer::findRandomUnitTarget(int playerIndexToAttack) {
+int cPlayer::findRandomUnitTarget(int playerIndexToAttack)
+{
     // Randomly assemble list, and then pick one
     int iTargets[100];
     memset(iTargets, -1, sizeof(iTargets));
@@ -1303,7 +1404,8 @@ int cPlayer::findRandomUnitTarget(int playerIndexToAttack) {
     return iTargets[rnd(maxTargets)];
 }
 
-int cPlayer::findRandomStructureTarget(int iAttackPlayer) {
+int cPlayer::findRandomStructureTarget(int iAttackPlayer)
+{
     // Randomly assemble list, and then pick one
     int iTargets[100];
     memset(iTargets, -1, sizeof(iTargets));
@@ -1314,7 +1416,7 @@ int cPlayer::findRandomStructureTarget(int iAttackPlayer) {
         if (structure[i])
             if (structure[i]->getOwner() == iAttackPlayer)
                 if (map.isVisible(structure[i]->getCell(), this) ||
-                    game.m_skirmish) {
+                        game.m_skirmish) {
                     iTargets[iT] = i;
 
                     iT++;
@@ -1330,7 +1432,8 @@ int cPlayer::findRandomStructureTarget(int iAttackPlayer) {
     return (iTargets[rnd(iT)]);
 }
 
-eCantBuildReason cPlayer::canBuildStructure(int iStructureType) {
+eCantBuildReason cPlayer::canBuildStructure(int iStructureType)
+{
     log(fmt::format("canBuildStructure: Wanting to build iStructureType = [{}]", iStructureType));
 
     assert(iStructureType > -1 && "Structure type must be > -1");
@@ -1374,7 +1477,8 @@ eCantBuildReason cPlayer::canBuildStructure(int iStructureType) {
     return eCantBuildReason::NONE;
 }
 
-cAbstractStructure *cPlayer::placeStructure(int destinationCell, int iStructureTypeId, int healthPercentage) {
+cAbstractStructure *cPlayer::placeStructure(int destinationCell, int iStructureTypeId, int healthPercentage)
+{
     cStructureFactory *pStructureFactory = cStructureFactory::getInstance();
     bool canPlace = canPlaceStructureAt(destinationCell, iStructureTypeId).success;
     if (!canPlace) {
@@ -1392,7 +1496,8 @@ cAbstractStructure *cPlayer::placeStructure(int destinationCell, int iStructureT
  * @param itemToPlace
  * @return
  */
-cAbstractStructure *cPlayer::placeItem(int destinationCell, cBuildingListItem *itemToPlace) {
+cAbstractStructure *cPlayer::placeItem(int destinationCell, cBuildingListItem *itemToPlace)
+{
     int iStructureTypeId = itemToPlace->getBuildId();
     cStructureFactory *pStructureFactory = cStructureFactory::getInstance();
 
@@ -1413,9 +1518,9 @@ cAbstractStructure *cPlayer::placeItem(int destinationCell, cBuildingListItem *i
     int healthPercentage = 50 + health_bar(50, slabbed, surface); // the minimum is 50% (with no slabs)
 
     cAbstractStructure *pStructure = pStructureFactory->createStructure(destinationCell,
-                                                                        iStructureTypeId,
-                                                                        getId(),
-                                                                        healthPercentage);
+                                     iStructureTypeId,
+                                     getId(),
+                                     healthPercentage);
 
     buildingListUpdater->onBuildItemCompleted(itemToPlace);
     itemToPlace->decreaseTimesToBuild();
@@ -1429,7 +1534,8 @@ cAbstractStructure *cPlayer::placeItem(int destinationCell, cBuildingListItem *i
     return pStructure;
 }
 
-void cPlayer::onNotifyGameEvent(const s_GameEvent &event) {
+void cPlayer::onNotifyGameEvent(const s_GameEvent &event)
+{
     // notify building list updater if it was a structure of mine. So it gets removed from the building list.
     if (event.eventType == eGameEventType::GAME_EVENT_PLAYER_DEFEATED) {
         auto msg = fmt::format("Player {} ({}) has been defeated.", event.player->getId(), event.player->getHouseName());
@@ -1458,10 +1564,12 @@ void cPlayer::onNotifyGameEvent(const s_GameEvent &event) {
         if (event.entityType == eBuildType::STRUCTURE) {
             if (event.eventType == eGameEventType::GAME_EVENT_DESTROYED) {
                 onMyStructureDestroyed(event);
-            } else if (event.eventType == eGameEventType::GAME_EVENT_CREATED) {
+            }
+            else if (event.eventType == eGameEventType::GAME_EVENT_CREATED) {
                 buildingListUpdater->onStructureCreated(event.entitySpecificType);
             }
-        } else if (event.entityType == eBuildType::UNIT) {
+        }
+        else if (event.entityType == eBuildType::UNIT) {
             if (event.eventType == eGameEventType::GAME_EVENT_DESTROYED) {
                 onMyUnitDestroyed(event);
             }
@@ -1475,9 +1583,9 @@ void cPlayer::onNotifyGameEvent(const s_GameEvent &event) {
         }
 
         if (event.eventType == eGameEventType::GAME_EVENT_LIST_ITEM_FINISHED ||
-            event.eventType == eGameEventType::GAME_EVENT_LIST_ITEM_ADDED ||
-            event.eventType == eGameEventType::GAME_EVENT_LIST_ITEM_CANCELLED ||
-            event.eventType == eGameEventType::GAME_EVENT_SPECIAL_LAUNCH) {
+                event.eventType == eGameEventType::GAME_EVENT_LIST_ITEM_ADDED ||
+                event.eventType == eGameEventType::GAME_EVENT_LIST_ITEM_CANCELLED ||
+                event.eventType == eGameEventType::GAME_EVENT_SPECIAL_LAUNCH) {
             if (cBuildingListItem::isAutoBuild(event.entityType, event.entitySpecificType)) {
                 startBuilding(event.entityType, event.entitySpecificType);
             }
@@ -1494,11 +1602,13 @@ void cPlayer::onNotifyGameEvent(const s_GameEvent &event) {
     }
 }
 
-void cPlayer::setAutoSlabStructures(bool value) {
+void cPlayer::setAutoSlabStructures(bool value)
+{
     m_autoSlabStructures = value;
 }
 
-int cPlayer::getScoutingUnitType() {
+int cPlayer::getScoutingUnitType()
+{
     // TODO: make this configurable within house props
     switch (house) {
         case HARKONNEN:
@@ -1517,7 +1627,8 @@ int cPlayer::getScoutingUnitType() {
 }
 
 
-int cPlayer::getInfantryType() {
+int cPlayer::getInfantryType()
+{
     // TODO: make this configurable within house props
     switch (house) {
         case HARKONNEN:
@@ -1535,7 +1646,8 @@ int cPlayer::getInfantryType() {
     return INFANTRY;
 }
 
-int cPlayer::getSoldierType() {
+int cPlayer::getSoldierType()
+{
     // TODO: make this configurable within house props
     switch (house) {
         case HARKONNEN:
@@ -1553,7 +1665,8 @@ int cPlayer::getSoldierType() {
     return SOLDIER;
 }
 
-int cPlayer::getSpecialUnitType() {
+int cPlayer::getSpecialUnitType()
+{
     // TODO: make this configurable within house props
     switch (house) {
         case HARKONNEN:
@@ -1571,14 +1684,16 @@ int cPlayer::getSpecialUnitType() {
     return TRIKE;
 }
 
-bool cPlayer::hasEnoughPowerFor(int structureType) const {
+bool cPlayer::hasEnoughPowerFor(int structureType) const
+{
     assert(structureType > -1 && "hasEnoughPowerFor called with structureType < 0!");
     assert(structureType < MAX_STRUCTURETYPES && "hasEnoughPowerFor called with structureType >= MAX_STRUCTURETYPES!");
     int powerLeft = powerProduce_ - powerUsage_;
     return sStructureInfo[structureType].power_drain <= powerLeft;
 }
 
-void cPlayer::logStructures() {
+void cPlayer::logStructures()
+{
     log("cPlayer::logStructures() START");
     for (int i = 0; i < MAX_STRUCTURETYPES; i++) {
         log(fmt::format("[{}] amount [{}]", sStructureInfo[i].name, iStructures[i]));
@@ -1586,11 +1701,13 @@ void cPlayer::logStructures() {
     log("cPlayer::logStructures() END");
 }
 
-void cPlayer::cancelBuildingListItem(cBuildingListItem *item) {
+void cPlayer::cancelBuildingListItem(cBuildingListItem *item)
+{
     this->sidebar->cancelBuildingListItem(item);
 }
 
-void cPlayer::cancelStructureBuildingListItemBeingBuilt() {
+void cPlayer::cancelStructureBuildingListItemBeingBuilt()
+{
     cBuildingListItem *pItem = getStructureBuildingListItemBeingBuilt();
     if (pItem) {
         cancelBuildingListItem(pItem);
@@ -1615,7 +1732,8 @@ void cPlayer::cancelStructureBuildingListItemBeingBuilt() {
  * @param iUnitIDToIgnore
  * @return
  */
-s_PlaceResult cPlayer::canPlaceStructureAt(int iCell, int iStructureType) {
+s_PlaceResult cPlayer::canPlaceStructureAt(int iCell, int iStructureType)
+{
     if (iStructureType != SLAB4) {
         return canPlaceStructureAt(iCell, iStructureType, -1);
     }
@@ -1650,7 +1768,8 @@ s_PlaceResult cPlayer::canPlaceStructureAt(int iCell, int iStructureType) {
  * @param iUnitIDToIgnore
  * @return
  */
-s_PlaceResult cPlayer::canPlaceStructureAt(int iCell, int iStructureType, int iUnitIDToIgnore) {
+s_PlaceResult cPlayer::canPlaceStructureAt(int iCell, int iStructureType, int iUnitIDToIgnore)
+{
     s_PlaceResult result;
 
     if (!map.isValidCell(iCell)) {
@@ -1690,7 +1809,8 @@ s_PlaceResult cPlayer::canPlaceStructureAt(int iCell, int iStructureType, int iU
                     if (idOfUnitAtCell != iUnitIDToIgnore) {
                         result.unitIds.insert(idOfUnitAtCell);
                     }
-                } else {
+                }
+                else {
                     result.unitIds.insert(idOfUnitAtCell);
                 }
             }
@@ -1703,13 +1823,15 @@ s_PlaceResult cPlayer::canPlaceStructureAt(int iCell, int iStructureType, int iU
     return result;
 }
 
-void cPlayer::log(const std::string& txt) const {
-  if (game.isDebugMode()) {
-    logbook(fmt::format("PLAYER [{}(={})] : {}", getId(), getHouseName(), txt));
-  }
+void cPlayer::log(const std::string &txt) const
+{
+    if (game.isDebugMode()) {
+        logbook(fmt::format("PLAYER [{}(={})] : {}", getId(), getHouseName(), txt));
+    }
 }
 
-bool cPlayer::startUpgradingForUnitIfPossible(int iUpgradeType) const {
+bool cPlayer::startUpgradingForUnitIfPossible(int iUpgradeType) const
+{
     cBuildingListItem *upgrade = isUpgradeAvailableToGrantUnit(iUpgradeType);
     if(upgrade && upgrade->isAvailable() && !upgrade->isBuilding()) {
         return startUpgrading(upgrade->getBuildId());
@@ -1717,7 +1839,8 @@ bool cPlayer::startUpgradingForUnitIfPossible(int iUpgradeType) const {
     return false;
 }
 
-bool cPlayer::startBuilding(cBuildingListItem *pItem) {
+bool cPlayer::startBuilding(cBuildingListItem *pItem)
+{
     if (!pItem) {
         log("startBuilding: Cannot start building null item!");
         return false;
@@ -1726,7 +1849,8 @@ bool cPlayer::startBuilding(cBuildingListItem *pItem) {
     return startBuilding(pItem->getBuildType(), pItem->getBuildId());
 }
 
-void cPlayer::onEntityDiscovered(const s_GameEvent &event) {
+void cPlayer::onEntityDiscovered(const s_GameEvent &event)
+{
 //    if (!event.player->isHuman()) { // todo == interacting player? (have a mentat/sound thing that listens to events??)
 //        // do nothing
 //        return;
@@ -1754,15 +1878,18 @@ void cPlayer::onEntityDiscovered(const s_GameEvent &event) {
                 triggerMusic = true;
                 if (pUnit.iType == SANDWORM) {
                     voiceId = SOUND_VOICE_10_ATR; // wormsign
-                } else {
+                }
+                else {
                     voiceId = SOUND_VOICE_09_ATR; // enemy unit approaching
                 }
             }
-        } else {
+        }
+        else {
             // this entity, nor I am human. So do not care about music stuff.
             return;
         }
-    } else if (event.entityType == eBuildType::STRUCTURE) {
+    }
+    else if (event.entityType == eBuildType::STRUCTURE) {
         cAbstractStructure *pStructure = structure[event.entityID];
         bool detectedEntityIsHuman = pStructure->getPlayer()->isHuman();
 
@@ -1775,7 +1902,8 @@ void cPlayer::onEntityDiscovered(const s_GameEvent &event) {
                     triggerMusic = true;
                 }
             }
-        } else {
+        }
+        else {
             // this entity, nor I am human. So do not care about music stuff.
             return;
         }
@@ -1787,7 +1915,8 @@ void cPlayer::onEntityDiscovered(const s_GameEvent &event) {
     if (triggerMusic) {
         if (game.m_musicType != MUSIC_ATTACK) {
             mayPlayVoice = game.playMusicByType(MUSIC_ATTACK, getId(), hasVoiceToPlay);
-        } else {
+        }
+        else {
             mayPlayVoice = false;
         }
     }
@@ -1797,7 +1926,8 @@ void cPlayer::onEntityDiscovered(const s_GameEvent &event) {
     }
 }
 
-bool cPlayer::startBuilding(eBuildType buildType, int buildId) {
+bool cPlayer::startBuilding(eBuildType buildType, int buildId)
+{
     switch (buildType) {
         case SPECIAL:
             return startBuildingSpecial(buildId);
@@ -1813,7 +1943,8 @@ bool cPlayer::startBuilding(eBuildType buildType, int buildId) {
     return false;
 }
 
-bool cPlayer::couldBuildSpecial(int iType) {
+bool cPlayer::couldBuildSpecial(int iType)
+{
     s_SpecialInfo &special = sSpecialInfo[iType];
     if (special.house & getHouseBitFlag()) {
         // it is applicable for this house
@@ -1829,7 +1960,8 @@ bool cPlayer::couldBuildSpecial(int iType) {
  * @param requestedUnitType
  * @return
  */
-int cPlayer::getSameOrSimilarUnitType(int requestedUnitType) {
+int cPlayer::getSameOrSimilarUnitType(int requestedUnitType)
+{
     // correct type for specific player type
     if (requestedUnitType == DEVASTATOR || requestedUnitType == DEVIATOR || requestedUnitType == SONICTANK) {
         return getSpecialUnitType();
@@ -1854,7 +1986,8 @@ int cPlayer::getSameOrSimilarUnitType(int requestedUnitType) {
  * @param iCell
  * @return
  */
-s_PlaceResult cPlayer::canPlaceConcreteAt(int iCell) {
+s_PlaceResult cPlayer::canPlaceConcreteAt(int iCell)
+{
     s_PlaceResult result;
 
     if (!map.isValidCell(iCell)) {
@@ -1868,7 +2001,8 @@ s_PlaceResult cPlayer::canPlaceConcreteAt(int iCell) {
     return result;
 }
 
-void cPlayer::onMyUnitDestroyed(const s_GameEvent &event) {
+void cPlayer::onMyUnitDestroyed(const s_GameEvent &event)
+{
     cUnit &pUnit = unit[event.entityID];
 
     // If a harvester died, and it is the last. And we have atleast one REFINERY; then send a Harvester to that
@@ -1891,19 +2025,22 @@ void cPlayer::onMyUnitDestroyed(const s_GameEvent &event) {
                 cAbstractStructure *pStructure = structure[structureId];
                 pStructure->unitIsNoLongerInteractingWithStructure(event.entityID);
             }
-        } else {
+        }
+        else {
             if (harvesters < 1) {
                 addNotification("No harvesters and refineries left!", eNotificationType::BAD);
             }
         }
-    } else if (pUnit.isType(CARRYALL)) {
+    }
+    else if (pUnit.isType(CARRYALL)) {
         if (pUnit.iNewUnitType == HARVESTER) { // was bringing new harvester...
             reinforceHarvesterIfNeeded(pUnit.getCell());
         }
     }
 }
 
-void cPlayer::reinforceHarvesterIfNeeded(int cell) {
+void cPlayer::reinforceHarvesterIfNeeded(int cell)
+{
     const std::vector<int> &refineries = getAllMyStructuresAsIdForType(REFINERY);
     int harvesters = getAmountOfUnitsForType(HARVESTER);
 
@@ -1930,11 +2067,12 @@ void cPlayer::reinforceHarvesterIfNeeded(int cell) {
  * @param cell
  * @return
  */
-std::vector<sEntityForDistance> cPlayer::getAllMyUnitsOrderClosestToCell(int cell) {
+std::vector<sEntityForDistance> cPlayer::getAllMyUnitsOrderClosestToCell(int cell)
+{
     const std::vector<int> &ids = getAllMyUnitsForType(-1);
     std::vector<sEntityForDistance> result = std::vector<sEntityForDistance>(0);
 
-    for (auto & unitId : ids) {
+    for (auto &unitId : ids) {
         cUnit aUnit = unit[unitId];
         double dist = map.distance(aUnit.getCell(), cell);
         const sEntityForDistance &entry = sEntityForDistance{
@@ -1948,11 +2086,12 @@ std::vector<sEntityForDistance> cPlayer::getAllMyUnitsOrderClosestToCell(int cel
     return result;
 }
 
-std::vector<sEntityForDistance> cPlayer::getAllMyStructuresOrderClosestToCell(int cell) {
+std::vector<sEntityForDistance> cPlayer::getAllMyStructuresOrderClosestToCell(int cell)
+{
     const std::vector<int> &ids = getAllMyStructuresAsId();
     std::vector<sEntityForDistance> result = std::vector<sEntityForDistance>(0);
 
-    for (auto & structureId : ids) {
+    for (auto &structureId : ids) {
         cAbstractStructure *pStructure = structure[structureId];
         double dist = map.distance(pStructure->getCell(), cell);
         const sEntityForDistance &entry = sEntityForDistance{
@@ -1974,7 +2113,8 @@ std::vector<sEntityForDistance> cPlayer::getAllMyStructuresOrderClosestToCell(in
  * TODO: This could be done smarter once we receive notifications when a unit gets created/destroyed!
  * @return
  */
-std::vector<int> cPlayer::getAllMyUnits() {
+std::vector<int> cPlayer::getAllMyUnits()
+{
     return getAllMyUnitsForType(-1);
 }
 
@@ -1984,7 +2124,8 @@ std::vector<int> cPlayer::getAllMyUnits() {
  * @param unitType
  * @return
  */
-std::vector<int> cPlayer::getAllMyUnitsForType(int unitType) const {
+std::vector<int> cPlayer::getAllMyUnitsForType(int unitType) const
+{
     std::vector<int> ids = std::vector<int>();
     for (int i = 0; i < MAX_UNITS; i++) {
         cUnit &pUnit = unit[i];
@@ -2004,11 +2145,13 @@ std::vector<int> cPlayer::getAllMyUnitsForType(int unitType) const {
     return ids;
 }
 
-bool cPlayer::hasMetQuota() {
+bool cPlayer::hasMetQuota()
+{
     return spiceQuota > 0 && hasEnoughCreditsFor(spiceQuota);
 }
 
-bool cPlayer::evaluateStillAlive() {
+bool cPlayer::evaluateStillAlive()
+{
     alive = false;
     for (int i = 0; i < MAX_STRUCTURES; i++) {
         cAbstractStructure *abstractStructure = structure[i];
@@ -2035,11 +2178,13 @@ bool cPlayer::evaluateStillAlive() {
     return isAlive();
 }
 
-std::vector<cPlayerNotification> &cPlayer::getNotifications() {
+std::vector<cPlayerNotification> &cPlayer::getNotifications()
+{
     return notifications;
 }
 
-void cPlayer::addNotification(const std::string& msg, eNotificationType type) {
+void cPlayer::addNotification(const std::string &msg, eNotificationType type)
+{
     notifications.push_back(cPlayerNotification(msg, type));
     std::sort(notifications.begin(), notifications.end(), [](const cPlayerNotification &lhs, const cPlayerNotification &rhs) {
         return lhs.getTimer() > rhs.getTimer();
@@ -2049,16 +2194,19 @@ void cPlayer::addNotification(const std::string& msg, eNotificationType type) {
     }
 }
 
-cAbstractStructure *cPlayer::getSelectedStructure() const {
+cAbstractStructure *cPlayer::getSelectedStructure() const
+{
     if (selected_structure < 0) return nullptr;
     return structure[selected_structure];
 }
 
-void cPlayer::deselectStructure() {
+void cPlayer::deselectStructure()
+{
     selected_structure = -1;
 }
 
-std::vector<int> cPlayer::getSelectedUnits() const {
+std::vector<int> cPlayer::getSelectedUnits() const
+{
     std::vector<int> ids = std::vector<int>();
     for (int i = 0; i < MAX_UNITS; i++) {
         cUnit &cUnit = unit[i];
@@ -2071,28 +2219,35 @@ std::vector<int> cPlayer::getSelectedUnits() const {
     return ids;
 }
 
-void cPlayer::deselectAllUnits() {
+void cPlayer::deselectAllUnits()
+{
     const std::vector<int> &ids = getAllMyUnits();
-    for (const auto & i : ids) {
+    for (const auto &i : ids) {
         deselectUnit(i);
     }
 }
 
-bool cPlayer::selectUnitsFromGroup(int groupId) {
+bool cPlayer::selectUnitsFromGroup(int groupId)
+{
     const std::vector<int> &ids = getAllMyUnitsForGroupNr(groupId);
     return selectUnits(ids);
 }
 
-bool cPlayer::selectUnits(const std::vector<int> &ids) const {
+bool cPlayer::selectUnits(const std::vector<int> &ids) const
+{
     bool infantrySelected = false;
     bool unitSelected = false;
 
     // check if there is a harvester in this group
-    auto position = std::find_if(ids.begin(), ids.end(), [&](const int &id) { return unit[id].isHarvester(); });
+    auto position = std::find_if(ids.begin(), ids.end(), [&](const int &id) {
+        return unit[id].isHarvester();
+    });
     bool hasHarvesterSelected = position != ids.end();
 
     position = std::find_if(ids.begin(), ids.end(),
-                            [&](const int &id) { return !unit[id].isHarvester() && !unit[id].isAirbornUnit(); });
+    [&](const int &id) {
+        return !unit[id].isHarvester() && !unit[id].isAirbornUnit();
+    });
     bool nonAirbornNonHarvesterUnitSelected = position != ids.end();
 
     if (hasHarvesterSelected && !nonAirbornNonHarvesterUnitSelected) {
@@ -2107,7 +2262,8 @@ bool cPlayer::selectUnits(const std::vector<int> &ids) const {
                 unitSelected = true; // do it here, instead of iterating again
             }
         }
-    } else {
+    }
+    else {
         // select all the non-harvester, non-airborn units
         for (auto id: ids) {
             cUnit &pUnit = unit[id];
@@ -2118,7 +2274,8 @@ bool cPlayer::selectUnits(const std::vector<int> &ids) const {
                 pUnit.bSelected = true;
                 if (pUnit.isInfantryUnit()) {
                     infantrySelected = true;
-                } else {
+                }
+                else {
                     unitSelected = true;
                 }
             }
@@ -2137,25 +2294,30 @@ bool cPlayer::selectUnits(const std::vector<int> &ids) const {
     return unitSelected || infantrySelected;
 }
 
-void cPlayer::setContextMouseState(eMouseState newState) {
+void cPlayer::setContextMouseState(eMouseState newState)
+{
     gameControlsContext->setMouseState(newState);
 }
 
-bool cPlayer::isContextMouseState(eMouseState state) {
+bool cPlayer::isContextMouseState(eMouseState state)
+{
     return gameControlsContext->isState(state);
 }
 
-void cPlayer::thinkSlow() {
+void cPlayer::thinkSlow()
+{
     if (orderProcesser) {
         orderProcesser->think();
     }
 }
 
-void cPlayer::deselectUnit(const int & unitId) {
+void cPlayer::deselectUnit(const int &unitId)
+{
     unit[unitId].bSelected = false;
 }
 
-void cPlayer::onMyStructureDestroyed(const s_GameEvent &event) {
+void cPlayer::onMyStructureDestroyed(const s_GameEvent &event)
+{
     buildingListUpdater->onStructureDestroyed(event.entitySpecificType);
 
     //

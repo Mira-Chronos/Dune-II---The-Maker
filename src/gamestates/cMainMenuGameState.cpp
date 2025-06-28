@@ -14,7 +14,8 @@
 #include <allegro.h>
 #include <fmt/core.h>
 
-cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), textDrawer(cTextDrawer(bene_font)) {
+cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), textDrawer(cTextDrawer(bene_font))
+{
     bmp_D2TM_Title = (BITMAP *) gfxinter[BMP_D2TM].dat;
 
     int logoWidth = bmp_D2TM_Title->w;
@@ -132,16 +133,19 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
     gui_window->addGuiObject(gui_btn_Exit);
 }
 
-cMainMenuGameState::~cMainMenuGameState() {
+cMainMenuGameState::~cMainMenuGameState()
+{
     delete gui_window;
     delete gui_btn_credits;
 }
 
-void cMainMenuGameState::thinkFast() {
+void cMainMenuGameState::thinkFast()
+{
 
 }
 
-void cMainMenuGameState::draw() const {
+void cMainMenuGameState::draw() const
+{
     if (game.isDebugMode()) {
         for (int x = 0; x < game.m_screenX; x += 60) {
             for (int y = 0; y < game.m_screenY; y += 20) {
@@ -170,16 +174,19 @@ void cMainMenuGameState::draw() const {
 
 }
 
-void cMainMenuGameState::onNotifyMouseEvent(const s_MouseEvent &event) {
+void cMainMenuGameState::onNotifyMouseEvent(const s_MouseEvent &event)
+{
     gui_window->onNotifyMouseEvent(event);
     gui_btn_credits->onNotifyMouseEvent(event);
 }
 
-eGameStateType cMainMenuGameState::getType() {
+eGameStateType cMainMenuGameState::getType()
+{
     return GAMESTATE_MAIN_MENU;
 }
 
-void cMainMenuGameState::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
+void cMainMenuGameState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
+{
     if (event.eventType == eKeyEventType::PRESSED) {
         if (event.hasKey(KEY_ESC)) {
             game.m_playing=false;

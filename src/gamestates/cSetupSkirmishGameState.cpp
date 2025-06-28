@@ -21,7 +21,8 @@
 #include <algorithm>
 
 
-cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr<cPreviewMaps> previewMaps) : cGameState(theGame) {
+cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr<cPreviewMaps> previewMaps) : cGameState(theGame)
+{
     m_previewMaps = previewMaps;
     for (int i = 0; i < MAX_PLAYERS; i++) {
         s_SkirmishPlayer &sSkirmishPlayer = skirmishPlayer[i];
@@ -177,18 +178,21 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
 
 }
 
-cSetupSkirmishGameState::~cSetupSkirmishGameState() {
+cSetupSkirmishGameState::~cSetupSkirmishGameState()
+{
     destroy_bitmap(background);
     background = nullptr;
 
     delete backButton;
 }
 
-void cSetupSkirmishGameState::thinkFast() {
+void cSetupSkirmishGameState::thinkFast()
+{
 
 }
 
-void cSetupSkirmishGameState::draw() const {
+void cSetupSkirmishGameState::draw() const
+{
     allegroDrawer->drawSprite(bmp_screen, background, 0, 0);
 
     allegroDrawer->gui_DrawRect(bmp_screen, topBar);
@@ -278,14 +282,16 @@ void cSetupSkirmishGameState::draw() const {
     mouse->draw();
 }
 
-void cSetupSkirmishGameState::drawTeams(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &teamsRect) const {
+void cSetupSkirmishGameState::drawTeams(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &teamsRect) const
+{
     int textColor = getTextColorForRect(sSkirmishPlayer, teamsRect);
     textDrawer.drawText(teamsRect.getX(), teamsRect.getY(), textColor, "%d", sSkirmishPlayer.team);
 }
 
 void
 cSetupSkirmishGameState::drawStartingUnits(const s_SkirmishPlayer &sSkirmishPlayer,
-                                           const cRectangle &startingUnitsRect) const {
+        const cRectangle &startingUnitsRect) const
+{
 
     int textColor = getTextColorForRect(sSkirmishPlayer, startingUnitsRect);
     textDrawer.drawText(startingUnitsRect.getX(), startingUnitsRect.getY(), textColor, "%d",
@@ -293,13 +299,15 @@ cSetupSkirmishGameState::drawStartingUnits(const s_SkirmishPlayer &sSkirmishPlay
 }
 
 void
-cSetupSkirmishGameState::drawCredits(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &creditsRect) const {
+cSetupSkirmishGameState::drawCredits(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &creditsRect) const
+{
     int textColor = getTextColorForRect(sSkirmishPlayer, creditsRect);
     textDrawer.drawText(creditsRect.getX(), creditsRect.getY(), textColor, "%d", sSkirmishPlayer.iCredits);
 }
 
 int
-cSetupSkirmishGameState::getTextColorForRect(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &rect) const {
+cSetupSkirmishGameState::getTextColorForRect(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &rect) const
+{
     if (rect.isPointWithin(mouse_x, mouse_y)) {
         int colorSelectedRedFade = game.getColorFadeSelected(255, 0, 0);
         int colorDisabledFade = game.getColorFadeSelected(128, 128, 128);
@@ -313,7 +321,8 @@ cSetupSkirmishGameState::getTextColorForRect(const s_SkirmishPlayer &sSkirmishPl
     return sSkirmishPlayer.bPlaying ? colorWhite : colorDisabled;
 }
 
-void cSetupSkirmishGameState::drawHouse(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &houseRec) const {
+void cSetupSkirmishGameState::drawHouse(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &houseRec) const
+{
     int textColor = getTextColorForRect(sSkirmishPlayer, houseRec);
     const std::string &cPlayerHouseString = cPlayer::getHouseNameForId(sSkirmishPlayer.iHouse);
     const char *cHouse = sSkirmishPlayer.iHouse > 0 ? cPlayerHouseString.c_str() : "Random";
@@ -321,30 +330,35 @@ void cSetupSkirmishGameState::drawHouse(const s_SkirmishPlayer &sSkirmishPlayer,
 }
 
 void
-cSetupSkirmishGameState::drawPlayerBrain(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &brainRect) const {
+cSetupSkirmishGameState::drawPlayerBrain(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &brainRect) const
+{
     if (sSkirmishPlayer.bHuman) {
         textDrawer.drawText(brainRect.getX(), brainRect.getY(), "Human");
-    } else {
+    }
+    else {
         int textColor = getTextColorForRect(sSkirmishPlayer, brainRect);
         textDrawer.drawText(brainRect.getX(), brainRect.getY(), textColor, "  CPU");
     }
 }
 
-void cSetupSkirmishGameState::drawStartPoints(int iStartingPoints, const cRectangle &startPoints) const {
+void cSetupSkirmishGameState::drawStartPoints(int iStartingPoints, const cRectangle &startPoints) const
+{
     int textColor = colorWhite;
     if (iSkirmishMap == 0) { // random map selected
         if (startPoints.isPointWithin(mouse_x, mouse_y)) {
             textColor = colorRed;
         }
-    } else {
+    }
+    else {
         textColor = colorDisabled;
     }
 
     textDrawer.drawText(startPoints.getX(), startPoints.getY(), textColor, "Startpoints: %d",
-                                      iStartingPoints);
+                        iStartingPoints);
 }
 
-void cSetupSkirmishGameState::drawPreviewMapAndMore(const cRectangle &previewMapRect) const {
+void cSetupSkirmishGameState::drawPreviewMapAndMore(const cRectangle &previewMapRect) const
+{
     if (iSkirmishMap > -1) {
         s_PreviewMap &selectedMap = m_previewMaps->getMap(iSkirmishMap);
         // Render skirmish map as-is (pre-loaded map)
@@ -354,7 +368,8 @@ void cSetupSkirmishGameState::drawPreviewMapAndMore(const cRectangle &previewMap
                     draw_sprite(bmp_screen, selectedMap.terrain, previewMapRect.getX(), previewMapRect.getY());
                 }
             }
-        } else {
+        }
+        else {
             // render the 'random generated skirmish map'
 
             // when mouse is hovering, draw it, else do not
@@ -364,7 +379,8 @@ void cSetupSkirmishGameState::drawPreviewMapAndMore(const cRectangle &previewMap
                         draw_sprite(bmp_screen, selectedMap.terrain, previewMapRect.getX(), previewMapRect.getY());
                     }
                 }
-            } else {
+            }
+            else {
                 if (selectedMap.name[0] != '\0') {
                     if (selectedMap.terrain) {
                         draw_sprite(bmp_screen, (BITMAP *) gfxinter[BMP_UNKNOWNMAP].dat, previewMapRect.getX(),
@@ -376,29 +392,34 @@ void cSetupSkirmishGameState::drawPreviewMapAndMore(const cRectangle &previewMap
     }
 }
 
-void cSetupSkirmishGameState::drawDetonateBlooms(const cRectangle &detonateBloomsRect) const {
+void cSetupSkirmishGameState::drawDetonateBlooms(const cRectangle &detonateBloomsRect) const
+{
     if (spawnBlooms) {
         int textColor = detonateBloomsRect.isPointWithin(mouse_x, mouse_y) ? colorRed : colorWhite;
         textDrawer.drawText(detonateBloomsRect.getX(), detonateBloomsRect.getY(), textColor, "Auto-detonate : %s",
                             detonateBlooms
                             ? "YES" : "NO");
-    } else {
+    }
+    else {
         textDrawer.drawText(detonateBloomsRect.getX(), detonateBloomsRect.getY(), colorDisabled, "Auto-detonate : -");
     }
 }
 
-void cSetupSkirmishGameState::drawBlooms(const cRectangle &bloomsRect) const {
+void cSetupSkirmishGameState::drawBlooms(const cRectangle &bloomsRect) const
+{
     int textColor = bloomsRect.isPointWithin(mouse_x, mouse_y) ? colorRed : colorWhite;
     textDrawer.drawText(bloomsRect.getX(), bloomsRect.getY(), textColor, "Spice blooms : %s",
                         spawnBlooms ? "YES" : "NO");
 }
 
-void cSetupSkirmishGameState::drawWorms(const cRectangle &wormsRect) const {
+void cSetupSkirmishGameState::drawWorms(const cRectangle &wormsRect) const
+{
     int textColor = wormsRect.isPointWithin(mouse_x, mouse_y) ? colorRed : colorWhite;
     textDrawer.drawText(wormsRect.getX(), wormsRect.getY(), textColor, "Worms? : %d", spawnWorms);
 }
 
-void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatState(int iSkirmishMap) {
+void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatState(int iSkirmishMap)
+{
     s_PreviewMap &selectedMap = m_previewMaps->getMap(iSkirmishMap);
 
     // this needs to be before setupPlayers :/
@@ -481,7 +502,8 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
                     if (p > HUMAN) {
                         iHouse = rnd(4) + 1;
                         // cpu player
-                    } else {// human may not be sardaukar
+                    }
+                    else {  // human may not be sardaukar
                         iHouse = rnd(3) + 1; // hark = 1, atr = 2, ord = 3, sar = 4
                     }
 
@@ -489,7 +511,7 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
                     for (int pl = 0; pl < AI_WORM; pl++) {
                         // already in use by other skirmish set-up players
                         if (skirmishPlayer[pl].iHouse > 0 &&
-                            skirmishPlayer[pl].iHouse == iHouse) {
+                                skirmishPlayer[pl].iHouse == iHouse) {
                             houseInUse = true;
                         }
 
@@ -504,10 +526,12 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
                     }
                 }
             }
-        } else {
+        }
+        else {
             if (p == AI_CPU5) {
                 iHouse = FREMEN;
-            } else {
+            }
+            else {
                 iHouse = GENERALHOUSE;
             }
         }
@@ -517,19 +541,24 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
         // TEAM Logic
         if (p == HUMAN) {
             pPlayer.init(p, nullptr);
-        } else if (p == AI_CPU5) {
+        }
+        else if (p == AI_CPU5) {
             pPlayer.init(p, new brains::cPlayerBrainFremenSuperWeapon(&pPlayer));
-        } else if (p == AI_CPU6) {
+        }
+        else if (p == AI_CPU6) {
             if (!game.m_disableWormAi) {
                 pPlayer.init(p, new brains::cPlayerBrainSandworm(&pPlayer));
-            } else {
+            }
+            else {
                 pPlayer.init(p, nullptr);
             }
-        } else {
+        }
+        else {
             if (maxThinkingAIs > 0) {
                 pPlayer.init(p, new brains::cPlayerBrainSkirmish(&pPlayer));
                 maxThinkingAIs--;
-            } else {
+            }
+            else {
                 pPlayer.init(p, nullptr);
             }
         }
@@ -552,7 +581,8 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
         if (!result.success) {
             // when failure, create mcv instead
             UNIT_CREATE(pPlayer.getFocusCell(), MCV, p, true);
-        } else {
+        }
+        else {
             pPlayer.placeStructure(pPlayer.getFocusCell(), CONSTYARD, 100);
         }
     }
@@ -589,15 +619,15 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
             int minRange = 3;
             int maxRange = 12;
             int cell = map.getRandomCellFromWithRandomDistanceValidForUnitType(pPlayer.getFocusCell(),
-                                                                               minRange,
-                                                                               maxRange,
-                                                                               iPlayerUnitType);
+                       minRange,
+                       maxRange,
+                       iPlayerUnitType);
 
             UNIT_CREATE(cell, iPlayerUnitType, p, true);
 
             cLogger::getInstance()->log(LOG_TRACE, COMP_SKIRMISHSETUP, "Creating units",
-                fmt::format("Wants {} amount of units; amount created {}", pSkirmishPlayer.startingUnits, u),
-                OUTC_NONE, p, pPlayer.getHouse());
+                                        fmt::format("Wants {} amount of units; amount created {}", pSkirmishPlayer.startingUnits, u),
+                                        OUTC_NONE, p, pPlayer.getHouse());
         }
 
         u++;
@@ -609,11 +639,14 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
         s_SkirmishPlayer &sSkirmishPlayer = skirmishPlayer[p];
         if (p == HUMAN) {
             player.setTeam(sSkirmishPlayer.team);
-        } else if (p == AI_CPU5) { // AI for fremen (super weapon)
+        }
+        else if (p == AI_CPU5) {   // AI for fremen (super weapon)
             player.setTeam(AI_CPU5);
-        } else if (p == AI_CPU6) {
+        }
+        else if (p == AI_CPU6) {
             player.setTeam(AI_CPU6); // worm team is against everyone
-        } else {
+        }
+        else {
             // all other AI's are their own team (campaign == AI's are friends, here they are enemies)
             player.setTeam(sSkirmishPlayer.team);
         }
@@ -647,7 +680,7 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
         logbook(fmt::format("Skirmish game with {} sandworms, minDistance {}, maxDistance {}", worms, minDistance, maxDistance));
         while (worms > 0) {
             int cell = map.getRandomCellFromWithRandomDistanceValidForUnitType(wormCell, minDistance, maxDistance,
-                                                                               SANDWORM);
+                       SANDWORM);
             if (cell < 0) {
                 // retry
                 failures++;
@@ -664,7 +697,8 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
             worms--;
             failures = 0; // reset failures
         }
-    } else {
+    }
+    else {
         logbook("Skirmish game without sandworms");
     }
 
@@ -674,11 +708,13 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
     game.setNextStateToTransitionTo(GAME_PLAYING); // this deletes the current state object
 }
 
-eGameStateType cSetupSkirmishGameState::getType() {
+eGameStateType cSetupSkirmishGameState::getType()
+{
     return GAMESTATE_SETUP_SKIRMISH_GAME;
 }
 
-void cSetupSkirmishGameState::onNotifyMouseEvent(const s_MouseEvent &event) {
+void cSetupSkirmishGameState::onNotifyMouseEvent(const s_MouseEvent &event)
+{
     switch (event.eventType) {
         case MOUSE_LEFT_BUTTON_CLICKED:
             onMouseLeftButtonClicked(event);
@@ -697,13 +733,15 @@ void cSetupSkirmishGameState::onNotifyMouseEvent(const s_MouseEvent &event) {
     startButton->onNotifyMouseEvent(event);
 }
 
-void cSetupSkirmishGameState::onMouseRightButtonClicked(const s_MouseEvent &) {
+void cSetupSkirmishGameState::onMouseRightButtonClicked(const s_MouseEvent &)
+{
     onMouseRightButtonClickedAtStartPoints();
     onMouseRightButtonClickedAtWorms();
     onMouseRightButtonClickedAtPlayerList();
 }
 
-void cSetupSkirmishGameState::onMouseRightButtonClickedAtPlayerList() {// draw players who will be playing ;)
+void cSetupSkirmishGameState::onMouseRightButtonClickedAtPlayerList()  // draw players who will be playing ;)
+{
     for (int p = 0; p < (AI_WORM - 1); p++) {
         const int iDrawY = playerList.getY() + 4 + (p * 22);
 
@@ -722,7 +760,8 @@ void cSetupSkirmishGameState::onMouseRightButtonClickedAtPlayerList() {// draw p
                     if (sSkirmishPlayer.iHouse < 0) {
                         sSkirmishPlayer.iHouse = SARDAUKAR;
                     }
-                } else {
+                }
+                else {
                     if (sSkirmishPlayer.iHouse < 0) {
                         sSkirmishPlayer.iHouse = ORDOS;
                     }
@@ -769,7 +808,8 @@ void cSetupSkirmishGameState::onMouseRightButtonClickedAtPlayerList() {// draw p
     }
 }
 
-void cSetupSkirmishGameState::onMouseLeftButtonClicked(const s_MouseEvent &) {
+void cSetupSkirmishGameState::onMouseLeftButtonClicked(const s_MouseEvent &)
+{
     onMouseLeftButtonClickedAtMapList();
     onMouseLeftButtonClickedAtStartPoints();
     onMouseLeftButtonClickedAtWorms();
@@ -779,7 +819,8 @@ void cSetupSkirmishGameState::onMouseLeftButtonClicked(const s_MouseEvent &) {
     onMouseLeftButtonClickedAtStartButton();
 }
 
-void cSetupSkirmishGameState::onMouseLeftButtonClickedAtPlayerList() {
+void cSetupSkirmishGameState::onMouseLeftButtonClickedAtPlayerList()
+{
     for (int p = 0; p < (AI_WORM - 1); p++) {
         int iDrawY = playerList.getY() + 4 + (p * 22);
         int iDrawX = 4;
@@ -796,7 +837,8 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtPlayerList() {
                 if (p > 1) {
                     if (sSkirmishPlayer.bPlaying) {
                         sSkirmishPlayer.bPlaying = false;
-                    } else {
+                    }
+                    else {
                         sSkirmishPlayer.bPlaying = true;
                     }
                 }
@@ -819,7 +861,8 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtPlayerList() {
                     if (sSkirmishPlayer.iHouse > SARDAUKAR) {
                         sSkirmishPlayer.iHouse = 0;
                     }
-                } else {
+                }
+                else {
                     if (sSkirmishPlayer.iHouse > ORDOS) {
                         sSkirmishPlayer.iHouse = 0;
                     }
@@ -865,7 +908,8 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtPlayerList() {
     }
 }
 
-void cSetupSkirmishGameState::onMouseLeftButtonClickedAtDetonateBlooms() {
+void cSetupSkirmishGameState::onMouseLeftButtonClickedAtDetonateBlooms()
+{
     if (spawnBlooms) {
         if (detonateBloomsRect.isPointWithin(mouse_x, mouse_y)) {
             detonateBlooms = !detonateBlooms;
@@ -873,13 +917,15 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtDetonateBlooms() {
     }
 }
 
-void cSetupSkirmishGameState::onMouseLeftButtonClickedAtSpawnBlooms() {
+void cSetupSkirmishGameState::onMouseLeftButtonClickedAtSpawnBlooms()
+{
     if (bloomsRect.isPointWithin(mouse_x, mouse_y)) {
         spawnBlooms = !spawnBlooms;
     }
 }
 
-void cSetupSkirmishGameState::onMouseLeftButtonClickedAtWorms() {
+void cSetupSkirmishGameState::onMouseLeftButtonClickedAtWorms()
+{
     if (wormsRect.isPointWithin(mouse_x, mouse_y)) {
         spawnWorms += 1;
         if (spawnWorms > 4) {
@@ -888,7 +934,8 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtWorms() {
     }
 }
 
-void cSetupSkirmishGameState::onMouseLeftButtonClickedAtStartButton() {
+void cSetupSkirmishGameState::onMouseLeftButtonClickedAtStartButton()
+{
     int topBarHeight = 21;
     int screen_y = game.m_screenY;
     int screen_x = game.m_screenX;
@@ -907,7 +954,8 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtStartButton() {
 
 }
 
-void cSetupSkirmishGameState::onMouseLeftButtonClickedAtStartPoints() {
+void cSetupSkirmishGameState::onMouseLeftButtonClickedAtStartPoints()
+{
     if (iSkirmishMap == 0) { // random map selected
         if (startPointsRect.isPointWithin(mouse_x, mouse_y)) {
             iStartingPoints++;
@@ -921,7 +969,8 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtStartPoints() {
     }
 }
 
-void cSetupSkirmishGameState::onMouseLeftButtonClickedAtMapList() {
+void cSetupSkirmishGameState::onMouseLeftButtonClickedAtMapList()
+{
     int const topBarHeight = 21;
     int const margin = 2;
     int const mapItemButtonHeight = topBarHeight;
@@ -946,7 +995,8 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtMapList() {
 
             if (i == 0) {
                 generateRandomMap();
-            } else {
+            }
+            else {
                 if (previewMap.name[0] != '\0') {
                     iStartingPoints = 0;
                     // count starting points
@@ -961,12 +1011,14 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtMapList() {
     }
 }
 
-void cSetupSkirmishGameState::generateRandomMap() {
+void cSetupSkirmishGameState::generateRandomMap()
+{
     randomMapGenerator.generateRandomMap(iStartingPoints, m_previewMaps->getMap(0) );
     spawnWorms = map.isBigMap() ? 4 : 2;
 }
 
-void cSetupSkirmishGameState::drawMapList(const cRectangle &mapList) const {
+void cSetupSkirmishGameState::drawMapList(const cRectangle &mapList) const
+{
     int const margin = 2;
     int const mapItemButtonHeight = topBarHeight;
     int const mapItemButtonWidth = mapList.getWidth() - (margin*2);
@@ -1005,7 +1057,8 @@ void cSetupSkirmishGameState::drawMapList(const cRectangle &mapList) const {
     }
 }
 
-void cSetupSkirmishGameState::onMouseRightButtonClickedAtStartPoints() {
+void cSetupSkirmishGameState::onMouseRightButtonClickedAtStartPoints()
+{
     if (iSkirmishMap == 0) { // random map selected
         if (startPointsRect.isPointWithin(mouse_x, mouse_y)) {
             iStartingPoints--;
@@ -1019,7 +1072,8 @@ void cSetupSkirmishGameState::onMouseRightButtonClickedAtStartPoints() {
     }
 }
 
-void cSetupSkirmishGameState::onMouseRightButtonClickedAtWorms() {
+void cSetupSkirmishGameState::onMouseRightButtonClickedAtWorms()
+{
     if (wormsRect.isPointWithin(mouse_x, mouse_y)) {
         spawnWorms -= 1;
         if (spawnWorms < 0) {
@@ -1029,11 +1083,13 @@ void cSetupSkirmishGameState::onMouseRightButtonClickedAtWorms() {
 }
 
 
-void cSetupSkirmishGameState::onMouseMovedTo(const s_MouseEvent &) {
+void cSetupSkirmishGameState::onMouseMovedTo(const s_MouseEvent &)
+{
 
 }
 
-void cSetupSkirmishGameState::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
+void cSetupSkirmishGameState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
+{
     if (event.isType(eKeyEventType::PRESSED)) {
         if (event.hasKey(KEY_ESC)) {
             game.setNextStateToTransitionTo(GAME_MENU);

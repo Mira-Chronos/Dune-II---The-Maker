@@ -11,7 +11,8 @@
 
 static bool allegroInitialized = false;
 
-cPlatformLayerInit::cPlatformLayerInit(const std::string& path_to_config_file, const std::string& window_title) {
+cPlatformLayerInit::cPlatformLayerInit(const std::string &path_to_config_file, const std::string &window_title)
+{
     cLogger *logger = cLogger::getInstance();
     logger->logHeader("Allegro");
 
@@ -25,18 +26,19 @@ cPlatformLayerInit::cPlatformLayerInit(const std::string& path_to_config_file, c
     // Using the install function wihout registering an at_exit function. The cleanup will be done
     // in the destructor of this object.
     if (install_allegro(SYSTEM_AUTODETECT, &errno, nullptr) != 0) {
-        const char* error_message = std::strerror(errno);
+        const char *error_message = std::strerror(errno);
         logger->log(LOG_FATAL, COMP_ALLEGRO, "Allegro init", error_message, OUTC_FAILED);
         throw std::runtime_error(error_message);
     }
 
     logger->log(LOG_INFO, COMP_ALLEGRO, "Allegro init", allegro_id, OUTC_SUCCESS);
 
-	set_window_title(window_title.c_str());
-	logger->log(LOG_INFO, COMP_ALLEGRO, "Set up window title", window_title, OUTC_SUCCESS);
+    set_window_title(window_title.c_str());
+    logger->log(LOG_INFO, COMP_ALLEGRO, "Set up window title", window_title, OUTC_SUCCESS);
 }
 
-cPlatformLayerInit::~cPlatformLayerInit() {
+cPlatformLayerInit::~cPlatformLayerInit()
+{
     cLogger *logger = cLogger::getInstance();
     logger->log(LOG_INFO, COMP_ALLEGRO, "Allegro shutdown", "Shutting down...");
     allegro_exit();

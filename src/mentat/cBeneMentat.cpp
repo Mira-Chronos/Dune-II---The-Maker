@@ -9,7 +9,8 @@
 #include <alfont.h>
 #include <allegro.h>
 
-cBeneMentat::cBeneMentat() : cAbstractMentat(false) {
+cBeneMentat::cBeneMentat() : cAbstractMentat(false)
+{
     iBackgroundFrame = MENTATM;
     buildLeftButton((BITMAP *) gfxmentat[BTN_NO].dat, 293, 423);
     buildRightButton((BITMAP *) gfxmentat[BTN_YES].dat, 466, 423);
@@ -17,12 +18,14 @@ cBeneMentat::cBeneMentat() : cAbstractMentat(false) {
     rightButtonCommand = new cYesButtonCommand();
 }
 
-void cBeneMentat::think() {
+void cBeneMentat::think()
+{
     // think like base class
     cAbstractMentat::think();
 }
 
-void cBeneMentat::draw() {
+void cBeneMentat::draw()
+{
     cAbstractMentat::draw();
 
     // when not speaking, draw 'do you wish to join house x'
@@ -36,18 +39,22 @@ void cBeneMentat::draw() {
     }
 }
 
-void cBeneMentat::draw_other() {
+void cBeneMentat::draw_other()
+{
 
 }
 
-void cBeneMentat::draw_eyes() {
+void cBeneMentat::draw_eyes()
+{
     draw_sprite(bmp_screen, (BITMAP *)gfxmentat[BEN_EYES01+ iMentatEyes].dat, offsetX + 128, offsetY + 240);
 }
 
-void cBeneMentat::draw_mouth() {
+void cBeneMentat::draw_mouth()
+{
     draw_sprite(bmp_screen, (BITMAP *)gfxmentat[BEN_MOUTH01+ iMentatMouth].dat, offsetX + 112, offsetY + 272);
 }
 
-void cBeneMentat::interact() {
+void cBeneMentat::interact()
+{
     cAbstractMentat::interact();
 }
