@@ -41,8 +41,8 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame) : cGa
     const cRectangle &toMissionSelectRect = *textDrawer.getAsRectangle(game.m_screenX - length,
                                             game.m_screenY - textDrawer.getFontHeight(),
                                             "Mission select");
-    cGuiButton *gui_btn_toMissionSelect = new cGuiButton(textDrawer, toMissionSelectRect, "Mission select",
-            buttonKind);
+    cGuiButton *gui_btn_toMissionSelect = new cGuiButton(textDrawer, toMissionSelectRect, 
+                    "Mission select", buttonKind);
     gui_btn_toMissionSelect->setTextAlignHorizontal(buttonTextAlignment);
     cGuiActionToGameState *action = new cGuiActionToGameState(GAME_MISSIONSELECT, false);
     gui_btn_toMissionSelect->setOnLeftMouseButtonClickedAction(action);
@@ -119,8 +119,7 @@ void cSelectYourNextConquestState::thinkFast()
         }
     }
 
-    if (state == eRegionState::REGSTATE_CONQUER_REGIONS ||
-            state == eRegionState::REGSTATE_INTRODUCTION) {
+    if (state == eRegionState::REGSTATE_CONQUER_REGIONS || state == eRegionState::REGSTATE_INTRODUCTION) {
         for (int i = 0; i < 27; i++) {
             cRegion &regionPiece = world[i];
 
@@ -153,8 +152,7 @@ void cSelectYourNextConquestState::thinkFast()
                 bool isRegionTextGiven = regionTextString[0] != '\0';
                 bool isRegionTextEmpty = regionTextString[0] == '\0';
 
-                if ((isRegionTextGiven && !drawManager->hasMessage()) ||
-                        isRegionTextEmpty) {
+                if ((isRegionTextGiven && !drawManager->hasMessage()) || isRegionTextEmpty) {
                     // set this up
                     region.iHouse = houseThatConquersTheRegion;
                     region.iAlpha = 1; // this makes it > 0 and thus it will become opaque over time (see THINK function)
