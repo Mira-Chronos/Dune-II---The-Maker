@@ -9,7 +9,7 @@
 #include "utils/cSoundPlayer.h"
 #include "utils/Graphics.hpp"
 #include <SDL2/SDL.h>
-
+#include "map/MapGeometry.hpp"
 #include <cassert>
 #include <iostream>
 
@@ -138,7 +138,8 @@ void cMiniMapDrawer::drawTerrain()
     for (int x = 0; x < (map->getWidth()); x++) {
         for (int y = 0; y < (map->getHeight()); y++) {
             iColor = Color{0, 0, 0,255};
-            int iCll = map->makeCell(x, y);
+            //@mira where is map ?
+            int iCll = map->getGeometry()->makeCell(x, y);
 
             if (map->isVisible(iCll, player->getId())) {
                 iColor = getRGBColorForTerrainType(map->getCellType(iCll));
@@ -179,7 +180,7 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly)
             // do not show the helper border
             if (!map->isWithinBoundaries(x, y)) continue;
 
-            int iCll = map->makeCell(x, y);
+            int iCll = map->getGeometry()->makeCell(x, y);
 
             if (!map->isVisible(iCll, player->getId())) {
                 // invisible cell
