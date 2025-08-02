@@ -76,7 +76,8 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
 
     iStartingPoints = 2;
     iSkirmishMap = -1;
-
+    mapIndexToDisplay = 0;
+    
     textDrawer = cTextDrawer(bene_font);
     randomMapGenerator = std::make_unique<cRandomMapGenerator>();
     generateRandomMap();
@@ -1057,7 +1058,7 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtMapList()
     int const mapItemButtonWidth = 145;
     int iDrawX = selectArea.getX() + margin;
     int maxMapsInSelectArea = selectArea.getWidth() / (mapItemButtonWidth+15);
-    int mapIndexToDisplay = 0;
+    mapIndexToDisplay = 0;
     // for every map that we read , draw here  <--- same copy/paste as in drawMapList !!!!!! ^_^
     for (int j = 0; j < maxMapsInSelectArea; j++) {
         // first element on top
@@ -1139,7 +1140,7 @@ void cSetupSkirmishGameState::drawMapList(const cRectangle &mapRect) const
     int iDrawX = mapRect.getX() + margin;
 
     int maxMapsInSelectArea = mapRect.getWidth() / (mapItemButtonWidth+15);
-    int mapIndexToDisplay = 0;
+    mapIndexToDisplay = 0;
     // for every map that we read , draw here
     for (int j = 0; j < maxMapsInSelectArea; j++) {
 
