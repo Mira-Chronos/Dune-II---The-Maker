@@ -31,7 +31,7 @@ void cRandomMapGenerator::generateRandomMap(int width, int height, int startingP
     memset(iSpotRock, -1, sizeof(iSpotRock));
 
     int totalSpots = a_spice + a_rock + a_hill;
-    float piece = 1.0f / totalSpots;
+    // float piece = 1.0f / totalSpots;
 
     int iSpot = 0;
     int iFails = 0;
